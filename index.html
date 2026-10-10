@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>Japan House Crew</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="House Crew">
+<meta name="theme-color" content="#23313f">
+<meta name="format-detection" content="telephone=no">
+<meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="vendor/leaflet.css?v=784232b19b">
+<link rel="stylesheet" href="app.css?v=784232b19b">
+</head><body>
+<header id="top">
+  <div class="brand">🏯 Crew</div>
+  <div id="progress"><b id="leftN">–</b> left</div>
+  <button id="fBtn" class="fbtn" aria-label="Filter and sort">⇅ Filter</button>
+  <button id="meBtn" class="me" aria-label="Me"></button>
+  <button id="menuBtn" class="ib" aria-label="Menu">⋯</button>
+</header>
+<div id="tip" hidden></div>
+<main>
+  <section id="v-swipe" class="view on"><div id="deck"></div><div id="empty" hidden></div></section>
+  <section id="v-matches" class="view scroll"><div id="matches"></div></section>
+  <section id="v-map" class="view"><div id="map"></div><div id="sheet" hidden></div></section>
+  <section id="v-group" class="view scroll"><div id="group"></div></section>
+</main>
+<div id="actions">
+  <button id="bToss" class="act toss" aria-label="Toss">✕<span class="dl">Toss</span></button>
+  <button id="bUndo" class="act undo" aria-label="Undo">↶<span class="dl">Undo</span></button>
+  <button id="bKeep" class="act keep" aria-label="Keep">♥<span class="dl">Keep</span></button>
+</div>
+<div id="kbd" aria-hidden="true"><kbd>←</kbd> toss · <kbd>→</kbd> keep · <kbd>↑</kbd><kbd>↓</kbd> photos · <kbd>Backspace</kbd> undo · <kbd>Enter</kbd> full-screen photos · drag the details panel works too</div>
+<nav id="tabs">
+  <button class="tab on" data-v="swipe"><span>🃏</span>Swipe</button>
+  <button class="tab" data-v="matches"><span>💞</span>Matches <i id="matchN"></i></button>
+  <button class="tab" data-v="map"><span>🗺️</span>Map</button>
+  <button class="tab" data-v="group"><span>👥</span>Group</button>
+</nav>
+<div id="signin" hidden>
+  <div class="sbox">
+    <div class="logo">🏯🏡</div>
+    <h2>Japan House Crew</h2>
+    <p class="small">Swipe cheap Japanese houses together. A house only disappears when <b>everyone</b> has tossed it.</p>
+    <form id="joinForm" autocomplete="off">
+      <label for="nameIn">What's your name?</label>
+      <input id="nameIn" maxlength="24" placeholder="e.g. Sam" autocapitalize="words" enterkeyhint="go" required>
+      <button id="joinBtn" type="submit">Join the group</button>
+    </form>
+    <div id="pickWrap" hidden><p class="small">Already joined on another device? Tap your name:</p><div id="pick"></div></div>
+    <p id="signErr" class="err" hidden></p>
+    <button type="button" id="introAgain" class="linkb">▶ How it works (30-sec intro)</button>
+  </div>
+</div>
+<div id="nocode" hidden><div class="sbox"><div class="logo">🔒</div><h2>Group link needed</h2><p>Open this app with the full group link you were sent (it ends in <code>?g=…</code>).</p></div></div>
+<div id="menu" hidden>
+  <div class="mcard">
+    <h3 id="mHello"></h3>
+    <button id="mSwitch" class="mb">🔁 Switch user</button>
+    <button id="mRefresh" class="mb">⟳ Refresh group votes</button>
+    <button id="mShareLink" class="mb">🔗 Share group link…</button>
+    <button id="mIntro" class="mb">🍃 How it works (intro)</button>
+    <button id="mTip" class="mb">ℹ︎ How to install / use</button>
+    <button id="mView" class="mb">🖥️ Switch to desktop view</button>
+    <button id="mViewAuto" class="mb" hidden>↺ Automatic view (by screen size)</button>
+    <p class="small" id="about"></p>
+    <button id="mClose" class="mb close">Close</button>
+  </div>
+</div>
+<div id="viewer" hidden><div id="vcar"></div><div id="vcount"></div><button id="vclose" class="ib" aria-label="Close">✕</button><button id="vprev" class="pa l" aria-label="Previous photo">‹</button><button id="vnext" class="pa r" aria-label="Next photo">›</button></div>
+<div id="det" hidden><div class="dcard"><button id="detClose" class="dx" aria-label="Close">✕</button><div id="detBody"></div>
+  <div id="detActs"><button id="detToss" class="toss">✕ Toss</button><button id="detKeep" class="keep">♥ Keep</button></div></div></div>
+<div id="filters" hidden><div class="fcard"><h3>Filter &amp; sort <span class="nb">(this device only)</span></h3><div id="fBody"></div>
+  <div class="fbar"><span id="fCount"></span><button id="fReset">Reset</button><button id="fDone">Done</button></div></div></div>
+<div id="match" hidden></div>
+<div id="toast"></div>
+<script src="vendor/leaflet.js?v=784232b19b"></script>
+<script src="intro.js?v=784232b19b"></script>
+<script src="app.js?v=784232b19b"></script>
+</body></html>
