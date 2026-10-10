@@ -154,8 +154,8 @@ const CSS = `
 #intro .in-art{position:relative;flex:1;min-height:0;overflow:hidden;cursor:pointer}
 #intro .in-art>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 #intro .in-cap{position:relative;z-index:2;margin-top:-18px;background:#fbf6ea;border-radius:26px 26px 0 0;padding:16px 22px calc(16px + env(safe-area-inset-bottom,0px));min-height:178px;box-shadow:0 -6px 22px #5a4a2a1f;cursor:pointer;display:flex;flex-direction:column}
-#intro .in-dots{display:flex;gap:6px;justify-content:center;margin:0 0 10px}
-#intro .in-dots button{width:8px;height:8px;padding:0;border:0;border-radius:6px;background:#d9cdb5;overflow:hidden;position:relative;transition:width .3s,background .3s;cursor:pointer}
+#intro .in-dots{display:flex;gap:0;justify-content:center;margin:-12px 0 -8px}
+#intro .in-dots button{width:8px;height:8px;padding:0;border:18px solid transparent;background-clip:padding-box;box-sizing:content-box;border-radius:6px;background:#d9cdb5;overflow:hidden;position:relative;transition:width .3s,background .3s;cursor:pointer}
 #intro .in-dots button.done{background:#b79b6e}
 #intro .in-dots button.on{width:30px;background:#e4d8c0}
 #intro .in-dots button.on i{position:absolute;inset:0;background:#c2763f;transform-origin:left;transform:scaleX(0);animation:inProg var(--d,4s) linear forwards}
@@ -167,7 +167,7 @@ const CSS = `
 #intro .in-hint{font-size:13px;color:#a08c70;text-align:center;margin-top:8px}
 #intro .in-hint kbd{font:inherit;font-size:11px;border:1px solid #d6c8ad;border-radius:4px;padding:0 4px;background:#fff}
 #intro .ib2{position:absolute;z-index:5;top:calc(12px + env(safe-area-inset-top,0px));border:0;border-radius:20px;padding:8px 14px;font:inherit;font-size:14px;font-weight:800;background:#fffaf0d9;color:#5a4a3a;box-shadow:0 2px 8px #0002;cursor:pointer;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
-#introSkip{right:14px}#introSound{left:14px}
+#introSkip{right:14px}#introSound{left:14px}#intro .ib2{min-height:44px;min-width:44px}
 #intro form{display:flex;gap:8px;margin-top:12px}
 #intro input{flex:1;min-width:0;font:inherit;font-size:18px;padding:11px 14px;border:2px solid #d9c8a5;border-radius:14px;background:#fff;color:#3b3330;-webkit-user-select:text;user-select:text}
 #intro input:focus{outline:none;border-color:#c2763f}

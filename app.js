@@ -1,7 +1,7 @@
 'use strict';
 /* Japan House Crew – group Keep/Toss. Votes live on the server (Netlify Function + Blobs); this device remembers who you are.
    Elimination rule: a house disappears for everyone only when EVERY member has tossed it. */
-const V = '6c2748f5be';
+const V = 'e520c7fa4e';
 const $ = s => document.querySelector(s);
 const fmt = n => n == null ? '–' : Math.round(n).toLocaleString('en-US');
 const esc = s => (s ?? '').toString().replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -99,7 +99,16 @@ function queue() {
   const md = myDec(), open = l => !md[l.id] && !eliminated(l.id);
   let q = ACTIVE.filter(l => open(l) && passF(l)); if (F.sort !== 'vibe' && SORTS[F.sort]) q = q.slice().sort(SORTS[F.sort]);
   const f = front.map(id => byId[id]).filter(l => l && open(l));   // undone cards come back on top even if filtered out
-  return f.length ? [...f, ...q.filter(l => !front.includes(l.id))] : q;
+  const out = f.length ? [...f, ...q.filter(l => !front.includes(l.id))] : q;
+  if (!SKIPPED.length) return out;   // skipped cards (SKIP_BUTTON build) go to the back, in skip order; no vote is recorded
+  const sk = new Set(SKIPPED); return [...out.filter(l => !sk.has(l.id)), ...SKIPPED.map(id => out.find(l => l.id === id)).filter(Boolean)];
+}
+const LS_SKIP = 'crew_skipped_' + G; let SKIPPED = load(LS_SKIP, []);
+function skipCard() {
+  const q = queue(); if (q.length < 2) return toast('Last card – nothing to skip to');
+  const id = q[0].id; front = front.filter(x => x !== id); SKIPPED = [...SKIPPED.filter(x => x !== id), id]; localStorage.setItem(LS_SKIP, JSON.stringify(SKIPPED));
+  const c = deck.lastElementChild; if (c) { c.style.transition = 'transform .25s ease-in, opacity .25s'; c.style.transform = 'translateY(40px) scale(.9)'; c.style.opacity = '0' }
+  toast('⤵ Skipped – back of your deck'); setTimeout(render, c ? 180 : 0);
 }
 // ---------------------------------------------------------------- filters / sort (per device, Zillow-style)
 const LS_F = 'crew_filters', FDEF = { sort: 'vibe', max: 0, regions: [], onsen: 0, ski: 0, surf: 0, hideBad: false };
@@ -204,7 +213,7 @@ function detailsHTML(l) {   // full details: desktop right column + phone detail
   ${l.flags.length ? `<div class="chips">${l.flags.map(f => `<span class="chip ${SERIOUS.test(f) ? 'bad' : ''}">${SERIOUS.test(f) ? '⚠️ ' : ''}${esc(f)}</span>`).join('')}</div>` : ''}
   <div class="vslot">${votesHTML(l)}</div>
   ${l.desc ? `<div class="desc">${esc(l.desc)}</div>` : ''}
-  <a class="lnk" href="${esc(l.url)}" target="_blank" rel="noopener">Open listing ↗</a>${l.agg ? ` · <a href="${esc(l.agg)}" target="_blank" rel="noopener">AkiyaJapan copy</a>` : ''}
+  <a class="lnk" href="${esc(l.url)}" target="_blank" rel="noopener">Open listing ↗</a>${l.agg ? ` · <a class="lnk" href="${esc(l.agg)}" target="_blank" rel="noopener">AkiyaJapan copy</a>` : ''}
   <div class="small">${esc(l.source)} · ${esc(l.verified || '')} · first seen ${l.first_seen} · times are estimates (straight-line × road factor)</div>`;
 }
 function cardHTML(l, top) {
@@ -444,7 +453,7 @@ function drawMap(fit) {
   if (DESK && !fit && ms.length && !drawMap.fitted) fit = true;   // first keeps on desktop: zoom to them once
   if (fit && ms.length) drawMap.fitted = true;
   ms.slice().reverse().forEach(({ l, v }) => {
-    L.marker([l.lat, l.lon], { icon: L.divIcon({ className: '', html: `<div class="mk" data-k="${Math.max(1, v.ok.length)}" style="background:${kcol(Math.max(1, v.ok.length), n)}">${usdK(l.usd)}<b>${v.lv.length ? '❤' : '✓'}${v.ok.length}</b></div>`, iconSize: [66, 24], iconAnchor: [33, 12] }), zIndexOffset: 1000 * v.k.length })   // more keeps = drawn on top (Leaflet otherwise stacks by latitude)
+    L.marker([l.lat, l.lon], { icon: L.divIcon({ className: '', html: `<div class="mk" data-k="${Math.max(1, v.ok.length)}" style="background:${kcol(Math.max(1, v.ok.length), n)}">${usdK(l.usd)}<b>${v.lv.length ? '❤' : '✓'}${v.ok.length}</b></div>`, iconSize: [70, 44], iconAnchor: [35, 22] }), zIndexOffset: 1000 * v.k.length })   // more keeps = drawn on top (Leaflet otherwise stacks by latitude)
       .on('click', e => { L.DomEvent.stopPropagation(e); sheet(l) }).addTo(layer);
   });
   const lg = $('#legend'); if (lg) lg.innerHTML = '<b>Price pins · ✓ yes votes</b><br>' + [1, 2, 3, 4].filter(k => k < n || k === 1).map(k => `<span class="sw" style="background:${kcol(k, 99)}"></span>${k}`).join(' ') + (n > 1 ? `<br><span class="sw" style="background:#e0a800"></span>everyone (${n})` : '');
@@ -537,3 +546,16 @@ setInterval(() => { if (document.visibilityState === 'visible') { sync(); flush(
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { sync(true); flush() } });
 window.addEventListener('focus', () => sync(true)); window.addEventListener('online', () => { flush(); sync(true) });
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => { });
+
+// SKIP_BUTTON build flag: quiet Skip under the No | Maybe | Love | Yes row (desktop key S). Card goes to the back of MY deck, no vote.
+(() => {
+  const a = document.getElementById('actions'); if (!a || document.getElementById('bSkip')) return;
+  const b = document.createElement('button'); b.id = 'bSkip'; b.type = 'button'; b.className = 'skipb mw-hover'; b.title = 'Skip for now (S)';
+  b.setAttribute('aria-label', 'Skip for now'); b.textContent = 'Skip for now ⤵'; const br = document.createElement('i'); br.className = 'skbrk'; a.append(br, b); a.classList.add('hasskip'); document.documentElement.classList.add('skipon');
+  b.onclick = () => { if (!me) return showSignin(S.members); skipCard() };
+  document.addEventListener('keydown', e => {
+    if ((e.key !== 's' && e.key !== 'S') || window.Intro?.open || !vis('swipe') || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || ['#det', '#filters', '#match', '#viewer', '#menu', '#signin'].some(x => !$(x).hidden)) return;
+    e.preventDefault(); skipCard();
+  });
+})();
