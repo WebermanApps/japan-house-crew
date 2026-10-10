@@ -6,20 +6,21 @@
 const LS = 'crew_intro_v1';
 const RM = matchMedia('(prefers-reduced-motion: reduce)');
 const SC = [
-  { t: 'Welcome to Japan House Crew', s: "We're finding our cabin in Japan together. I'm Mori, the forest spirit – let me show you how it works.", d: 4400 },
-  { t: 'Swipe right = Yes', s: 'Like it? Send it right. Really love it? Tap the red ❤️ Love button.', d: 4000 },
-  { t: 'Swipe left = No', s: 'Not for us? Let it drift away like a leaf. Unsure? Tap ? Maybe.', d: 4000 },
-  { t: 'A house only disappears when EVERYONE says No', s: 'One single Yes, Love or Maybe and it stays in play for the whole crew.', d: 5000 },
-  { t: "If everyone says Yes… It's a match!", s: 'Yes or Love from all of us = lanterns up! Love counts double in Matches.', d: 4800 },
-  { t: 'Matches = we go visit and maybe buy it together', s: 'Road trip to the countryside, keys in hand.', d: 4400 },
-  { t: "What's your name?", s: 'So the crew knows who voted what. No password, no email.', d: 0 },
+  { k: 1, t: 'Welcome to Japan House Crew', s: "We're finding our cabin in Japan together. I'm Mori, the forest spirit – let me show you how it works.", d: 4400 },
+  { k: 2, t: 'Swipe right = Yes', s: 'Like it? Send it right – whoosh, like a ski run.', d: 4000 },
+  { k: 3, t: 'Swipe left = No', s: 'Not for us? Let it drift away like an autumn leaf.', d: 4000 },
+  { k: 8, t: 'Maybe ? and Love ❤️ buttons', s: 'Unsure? Tap ? Maybe. Dream house? Tap the red ❤️ Love – it counts double in Matches.', d: 4600 },
+  { k: 4, t: 'A house only disappears when EVERYONE says No', s: 'One single Yes, Love or Maybe and it stays in play for the whole crew.', d: 5000 },
+  { k: 5, t: "If everyone says Yes… It's a match!", s: 'Yes or Love from all of us = lanterns up!', d: 4800 },
+  { k: 6, t: 'Matches = we go visit and maybe buy it together', s: 'Road trip to the countryside, keys in hand.', d: 4400 },
+  { k: 7, t: "What's your name?", s: 'So the crew knows who voted what. No password, no email.', d: 0 },
 ];
 const N = SC.length;
 // ------------------------------------------------------------------ art helpers
 let cid = 0;
 const FUR = { a: 'url(#iFur)', b: 'url(#iFur2)', c: 'url(#iFur3)', d: 'url(#iFur4)' };
 const at = (x, y, s, inner, r = 0) => `<g transform="translate(${x} ${y})${r ? ` rotate(${r})` : ''}${s !== 1 ? ` scale(${s})` : ''}">${inner}</g>`;
-function spirit(f = 'a', cls = '', face = '') {
+function spirit(f = 'a', cls = '', face = '', acc = '') {
   const fill = FUR[f];
   return `<g class="sp ${cls}">
   <ellipse cx="0" cy="50" rx="34" ry="6" fill="#3d4a3a" opacity=".16"/>
@@ -33,8 +34,15 @@ function spirit(f = 'a', cls = '', face = '') {
    <circle cx="-11" cy="-8" r="3" fill="#fff"/><circle cx="17" cy="-8" r="3" fill="#fff"/><circle cx="-16" cy="-1" r="1.4" fill="#fff"/><circle cx="12" cy="-1" r="1.4" fill="#fff"/></g>
   <ellipse cx="-25" cy="8" rx="6" ry="3.5" fill="#f2a0a0" opacity=".7"/><ellipse cx="25" cy="8" rx="6" ry="3.5" fill="#f2a0a0" opacity=".7"/>
   ${face === 'o' ? '<ellipse cx="0" cy="11" rx="3.5" ry="4.5" fill="#6b4a46"/>' : face === 'n' ? '<path d="M-4 11h8" stroke="#5a4a46" stroke-width="1.8" stroke-linecap="round"/>' : '<path d="M-5 8Q0 14 5 8" stroke="#5a4a46" stroke-width="1.9" fill="none" stroke-linecap="round"/>'}
-  <ellipse cx="-14" cy="47" rx="8" ry="4.5" fill="#efeadf"/><ellipse cx="14" cy="47" rx="8" ry="4.5" fill="#efeadf"/></g>`;
+  <ellipse cx="-14" cy="47" rx="8" ry="4.5" fill="#efeadf"/><ellipse cx="14" cy="47" rx="8" ry="4.5" fill="#efeadf"/>${ACC[acc] || ''}</g>`;
 }
+const ACC = {   // Mori's little outfits per activity
+  ski: `<path d="M-30 28Q0 40 30 28L31 37Q0 50 -31 37Z" fill="#e8584a"/><path d="M16 36l5 22l8 -2l-4 -21z" fill="#d6453d"/><path d="M-30 31Q0 43 30 31" stroke="#fff" stroke-width="1.5" fill="none" opacity=".6"/>
+   <path d="M-58 57H48Q60 57 62 47" stroke="#3c5a80" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M-41 18L-56 58M41 18L52 58" stroke="#7a5a3c" stroke-width="2.6" stroke-linecap="round"/><circle cx="-54" cy="54" r="3" fill="none" stroke="#7a5a3c" stroke-width="1.5"/><circle cx="50" cy="54" r="3" fill="none" stroke="#7a5a3c" stroke-width="1.5"/>`,
+  hike: `<rect x="31" y="-8" width="20" height="32" rx="7" fill="#c2763f"/><rect x="34" y="4" width="14" height="8" rx="3" fill="#a85f2e"/><path d="M28 -6Q36 -14 44 -8" stroke="#7a4a26" stroke-width="2.5" fill="none"/>
+   <path d="M-48 -14L-58 54" stroke="#7a5a3c" stroke-width="3.6" stroke-linecap="round"/><circle cx="-48" cy="-15" r="3.4" fill="#9a7048"/>`,
+  towel: `<rect x="-18" y="-47" width="36" height="11" rx="5" fill="#fff" stroke="#d8ccb2" stroke-width="1.2"/><path d="M-10 -47v11M0 -47v11M10 -47v11" stroke="#9fc8d6" stroke-width="1.4"/>`,
+};
 function house(cls = '') {
   return `<g class="hs ${cls}"><ellipse cx="0" cy="2" rx="72" ry="7" fill="#4f7d43" opacity=".3"/>
   <circle cx="-62" cy="-8" r="12" fill="#6e9f58"/><circle cx="-52" cy="-4" r="9" fill="#82b46a"/><circle cx="60" cy="-7" r="11" fill="#6e9f58"/>
@@ -114,7 +122,27 @@ const AB = { sp: [-50, -72, 100, 128], spH: [-50, -114, 100, 170], card: [-66, -
   puff: [-60, -60, 120, 120], walk: [-60, -40, 120, 72], house: [-75, -92, 150, 100] };
 const A = (x, y, s, cls, inner, b, style = '') => `<div class="ac ${cls}" style="left:${(x + b[0] * s).toFixed(1)}px;top:${(y + b[1] * s).toFixed(1)}px;width:${(b[2] * s).toFixed(1)}px;height:${(b[3] * s).toFixed(1)}px;${style}"><svg viewBox="${b.join(' ')}" overflow="visible">${inner}</svg></div>`;
 const dl = d => `animation-delay:${d}s`;
-const FG = `${CLOUDS}${SV('in-steam')}<g fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".9">${[46, 64, 82].map((x, i) => `<path class="steam" style="animation-delay:${i * 1}s" d="M${x} 446q-6 -8 0 -16t0 -16"/>`).join('')}</g></svg>
+const FG = `${SV('in-season')}
+<g class="ss ss1 ss7"><g transform="translate(330 300)"><path d="M0 0V-40M0 -30L-14 -46M0 -36L12 -52" stroke="#7a5040" stroke-width="5" stroke-linecap="round" fill="none"/>${[[-16,-52,20],[8,-60,22],[-2,-74,18],[18,-44,14],[-28,-40,13]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#f6c1cc" opacity=".92"/>`).join('')}</g>
+ <g transform="translate(60 330) scale(.8)"><path d="M0 0V-40M0 -30L-14 -46M0 -36L12 -52" stroke="#7a5040" stroke-width="5" stroke-linecap="round" fill="none"/>${[[-16,-52,20],[8,-60,22],[-2,-74,18],[18,-44,14]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#f9d3da" opacity=".95"/>`).join('')}</g></g>
+<g class="ss ss2"><rect width="400" height="500" fill="#eef4f8" opacity=".35"/>
+ <path d="M-20 270L40 222L82 240L150 176L205 230L250 206L300 236L350 196L420 248V262L350 214L300 250L250 220L205 244L150 192L82 254L40 236L-20 284Z" fill="#fff" opacity=".9"/>
+ <path d="M-20 318Q70 262 180 300T420 282V520H-20Z" fill="#f7fafc"/><path d="M-20 372Q110 326 230 362T420 350V520H-20Z" fill="#eaf1f6"/><path d="M-20 436Q130 404 260 434T420 424V520H-20Z" fill="#dfe9f1"/>
+ <path d="M10 330C90 360 120 400 200 420S330 470 400 470" stroke="#cfdde8" stroke-width="16" fill="none" stroke-linecap="round" opacity=".8"/>
+ ${[[36,318,1],[58,312,.78],[342,296,1.08],[366,300,.82]].map(([x,y,k])=>`<g transform="translate(${x} ${y}) scale(${k})"><use href="#iCedar"/><path d="M-12 -56Q0 -62 12 -56M-16 -36Q0 -42 16 -36" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/></g>`).join('')}</g>
+<g class="ss ss3"><rect width="400" height="500" fill="#f6d9b0" opacity=".28"/>
+ <path d="M-20 372Q110 326 230 362T420 350V520H-20Z" fill="#c9a45a" opacity=".55"/><path d="M-20 436Q130 404 260 434T420 424V520H-20Z" fill="#b8873f" opacity=".5"/>
+ <path d="M400 500C320 450 360 420 280 400S150 380 120 340" stroke="#e3c48e" stroke-width="22" fill="none" stroke-linecap="round" opacity=".95"/><path d="M400 500C320 450 360 420 280 400S150 380 120 340" stroke="#c9a46a" stroke-width="2" stroke-dasharray="5 9" fill="none"/>
+ ${[[40,320,'#d9603f',1],[80,300,'#e8a63c',.8],[350,300,'#d9603f',1.1],[300,316,'#e0873a',.75],[380,330,'#f0b54a',.7]].map(([x,y,c,k])=>`<g transform="translate(${x} ${y}) scale(${k})"><rect x="-3" y="-16" width="6" height="16" fill="#6b4a33"/><circle cx="0" cy="-34" r="22" fill="${c}"/><circle cx="-12" cy="-26" r="13" fill="${c}" opacity=".85"/><circle cx="12" cy="-26" r="13" fill="${c}" opacity=".85"/></g>`).join('')}</g>
+<g class="ss ss8 ss4"><rect width="400" height="500" fill="#f3e6cf" opacity=".25"/>
+ <g transform="translate(200 432)"><ellipse rx="190" ry="54" fill="#9fd2dc"/><ellipse rx="170" ry="42" cy="4" fill="#b9e2ea"/><ellipse rx="120" ry="20" cy="8" fill="#d3eef2" opacity=".8"/>
+  <g fill="#a8a59a">${[[-188,0,18,11],[-160,-34,16,10],[-110,-48,18,10],[-50,-56,16,9],[10,-58,18,10],[70,-54,17,10],[128,-44,18,10],[172,-24,16,10],[190,8,16,11]].map(([x,y,rx,ry])=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"/>`).join('')}</g></g>
+ <g stroke="#b99a62" stroke-width="5">${Array.from({length:14},(_,i)=>`<path d="M${i*30} 300V372"/>`).join('')}</g><path d="M0 312H400M0 350H400" stroke="#8f7446" stroke-width="3"/></g>
+<g class="ss ss5"><rect width="400" height="500" fill="#f8b77a" opacity=".22"/>
+ <path d="M-10 70Q100 110 200 76T410 80" stroke="#7a5a3c" stroke-width="1.5" fill="none"/>${[20,60,100,140,180,220,260,300,340,380].map((x,i)=>`<g transform="translate(${x} ${82+Math.sin(i)*10})"><rect x="-6" y="0" width="12" height="16" rx="5" fill="${i%2?'#f2884b':'#e8584a'}"/><rect x="-3" y="-2" width="6" height="2" fill="#5a3a2a"/></g>`).join('')}</g>
+<g class="ss ss6"><rect width="400" height="500" fill="#fff6d8" opacity=".25"/></g>
+</svg>
+${CLOUDS}${SV('in-steam')}<g fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".9">${[46, 64, 82].map((x, i) => `<path class="steam" style="animation-delay:${i * 1}s" d="M${x} 446q-6 -8 0 -16t0 -16"/>`).join('')}</g></svg>
 ${SV('in-night')}<rect width="400" height="500" fill="#1c2a4a" opacity=".58"/>
 <g class="stars" fill="#fff">${[[40, 40], [90, 90], [150, 30], [230, 70], [330, 40], [370, 120], [280, 140], [60, 160], [190, 120]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${1 + (i % 3) * .5}" style="animation-delay:${(i * .37).toFixed(2)}s"/>`).join('')}</g></svg>
 ${SV('sc sc1')}${at(222, 336, 1.3, house())}
@@ -129,10 +157,10 @@ ${SV('sc sc7')}${[[110, 230], [300, 300], [90, 330], [320, 400]].map(([x, y], i)
 <div class="sc sc1">${A(126, 380, 1.05, 'wave', spirit('a'), AB.sp)}</div>
 <div class="sc sc2">${A(200, 214, 1.12, 'nx', card('¥2.8M', '5LDK · 99 m² · ski 20 min', '', 74), AB.card)}${A(200, 206, 1.18, 'go', card('¥1.5M', '6DK · 119 m² · onsen 9 min', 'k'), AB.card)}
  ${A(268, 170, 1.4, 'hp', heart(), AB.heart)}${A(236, 142, .7, 'hp hp2', heart('#f58ea0'), AB.heart)}${A(300, 142, .6, 'hp hp3', heart('#f58ea0'), AB.heart)}
- ${A(92, 392, 1, 'push', spirit('a', '', 'o'), AB.sp)}</div>
+ ${A(96, 384, 1, 'mski', spirit('a', '', 'o', 'ski'), [-64, -72, 130, 136])}</div>
 <div class="sc sc3">${A(200, 214, 1.12, 'nx', card('¥980k', '4K · 88 m² · surf 25 min', '', 61), AB.card)}${A(200, 206, 1.18, 'go', card('¥4.2M', '3DK · 70 m² · no road access', 't', 38), AB.card)}
  ${[[150, 150, '#e0873a'], [260, 120, '#d9603f'], [300, 200, '#e8a63c']].map(([x, y, c], i) => A(x, y, 1.2, 'lf', maple(c), AB.leaf, dl(.9 + i * .25))).join('')}
- ${A(310, 392, 1, 'pushl', spirit('a', '', 'n'), AB.sp)}</div>
+ ${A(304, 388, 1, 'mhike', spirit('a', '', 'n', 'hike'), [-62, -72, 116, 132])}</div>
 <div class="sc sc4">${A(200, 160, 1, 'go', card('¥3.3M', '7DK · 158 m² · fixer-upper', '', 52), AB.card)}
  ${A(200, 160, 1, 'puff', [[-30, -10, 22], [20, -30, 26], [30, 20, 24], [-20, 30, 20], [0, 0, 30]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity=".9"/>`).join(''), AB.puff)}
  ${A(200, 262, 1, 'tally', [0, 1, 2, 3].map(i => `<circle cx="${-33 + i * 22}" cy="0" r="7" fill="#fff" stroke="#c9bfae" stroke-width="2"/>${at(-33 + i * 22, 0, .55, `<g class="tx" style="animation-delay:${.6 + i * .8}s">${xb}</g>`)}`).join(''), [-50, -12, 100, 24])}
@@ -145,6 +173,12 @@ ${SV('sc sc7')}${[[110, 230], [300, 300], [90, 330], [320, 400]].map(([x, y], i)
 <div class="sc sc6">${A(262, 196, 1.5, 'kf', key, AB.key)}${A(170, 394, 1, 'walk', walkers, AB.walk)}</div>
 <div class="sc sc7">${A(200, 318, 1.7, 'bob', spirit('a', 'wave'), AB.sp)}
  ${A(272, 166, 1, 'bub', '<path d="M-58 -26H58Q66 -26 66 -18V14Q66 22 58 22H-14L-30 36L-26 22H-58Q-66 22 -66 14V-18Q-66 -26 -58 -26Z" fill="#fffdf6" stroke="#d8ccb2" stroke-width="1.5"/><text x="0" y="-4" text-anchor="middle" font-size="13" font-weight="800" fill="#3b3330">Hajimemashite!</text><text x="0" y="13" text-anchor="middle" font-size="10" fill="#7a6a5a">nice to meet you</text>', AB.bub)}</div>
+<div class="sc sc8">${A(200, 400, 1.25, 'soak', spirit('a', '', '', 'towel') + '<ellipse cx="0" cy="40" rx="78" ry="22" fill="#b9e2ea" opacity=".95"/><path d="M-60 34q10 -5 20 0t20 0t20 0t20 0t20 0t20 0" stroke="#fff" stroke-width="2" fill="none" opacity=".8"/>', [-80, -72, 160, 136])}
+ ${A(118, 250, 1, 'bubm', '<circle r="30" fill="#fff8e6" stroke="#f0a020" stroke-width="3"/><text y="12" text-anchor="middle" font-size="34" font-weight="900" fill="#f0a020">?</text><path d="M14 26L26 40L4 29Z" fill="#fff8e6" stroke="#f0a020" stroke-width="2"/>', [-34, -34, 68, 78])}
+ ${A(282, 238, 1, 'bubl', '<circle r="32" fill="#fff0f2" stroke="#e8335f" stroke-width="3"/>' + at(0, 6, 1.5, heart('#e8335f')) + '<path d="M-14 28L-28 44L-4 31Z" fill="#fff0f2" stroke="#e8335f" stroke-width="2"/>', [-36, -36, 72, 84])}
+ ${A(140, 168, 1, 'pill pl1', '<rect x="-46" y="-18" width="92" height="36" rx="18" fill="#fff" stroke="#f0a020" stroke-width="3"/><text y="6" text-anchor="middle" font-size="15" font-weight="800" fill="#c47a00">? Maybe</text>', [-48, -20, 96, 40])}
+ ${A(262, 168, 1, 'pill pl2', '<rect x="-46" y="-18" width="92" height="36" rx="18" fill="#e8335f"/><text y="6" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">❤ Love</text>', [-48, -20, 96, 40])}
+ ${[[150, 330], [250, 320], [200, 300]].map(([x, y], i) => A(x, y, 1, 'stm', '<path d="M0 0q-8 -10 0 -20t0 -20" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>', [-10, -44, 20, 48], dl(i * .7))).join('')}</div>
 </div>`;
 // ------------------------------------------------------------------ styles
 const CSS = `
@@ -155,11 +189,12 @@ const CSS = `
 #intro .in-art>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 #intro .in-cap{position:relative;z-index:2;margin-top:-18px;background:#fbf6ea;border-radius:26px 26px 0 0;padding:16px 22px calc(16px + env(safe-area-inset-bottom,0px));min-height:178px;box-shadow:0 -6px 22px #5a4a2a1f;cursor:pointer;display:flex;flex-direction:column}
 #intro .in-dots{display:flex;gap:0;justify-content:center;margin:-12px 0 -8px}
-#intro .in-dots button{width:8px;height:8px;padding:0;border:18px solid transparent;background-clip:padding-box;box-sizing:content-box;border-radius:6px;background:#d9cdb5;overflow:hidden;position:relative;transition:width .3s,background .3s;cursor:pointer}
+#intro .in-dots button{width:8px;height:8px;padding:0;border:18px solid transparent;background-clip:padding-box;box-sizing:content-box;border-radius:6px;background:#d9cdb5;background-clip:padding-box;overflow:hidden;position:relative;transition:width .3s,background .3s;cursor:pointer}
 #intro .in-dots button.done{background:#b79b6e}
 #intro .in-dots button.on{width:30px;background:#e4d8c0}
 #intro .in-dots button.on i{position:absolute;inset:0;background:#c2763f;transform-origin:left;transform:scaleX(0);animation:inProg var(--d,4s) linear forwards}
 #intro .in-dots button.on.static i{animation:none;transform:none}
+#intro .in-dots button,#intro .in-dots button.on,#intro .in-dots button.done{background-clip:padding-box}
 #intro h2{margin:0 0 6px;font-size:23px;line-height:1.2;font-weight:800;color:#3b3330}
 #intro h2 em{font-style:normal;color:#c2763f}
 #intro p{margin:0;font-size:15.5px;line-height:1.4;color:#6b5d4f}
@@ -190,7 +225,7 @@ const CSS = `
 @keyframes inProg{to{transform:scaleX(1)}}
 @keyframes inText{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 #intro :is(.cd,.go,.nx,.stamp,.hp,.push,.pushl,.lf,.tx,.shk,.puff,.glow,.lan,.lw,.fwb,.hop,.walk,.kf,.bob,.bub,.tw,.sp-leaf,.sp-eyes,.sp-ar,.steam,.stars circle){transform-box:fill-box}
-#intro .in-art svg.sc{display:none}#intro .in-art svg.sc.on{display:block;animation:inFade .5s ease both}
+#intro .in-art svg.in-season{position:absolute;inset:0;width:100%;height:100%}#intro .in-art svg.sc{display:none}#intro .in-art svg.sc.on{display:block;animation:inFade .5s ease both}
 #intro .in-stage{position:absolute;left:0;top:0;width:400px;height:500px;transform-origin:0 0}
 #intro .in-stage>.sc{display:none;position:absolute;inset:0}#intro .in-stage>.sc.on{display:block;animation:inFade .5s ease both}
 #intro .ac{position:absolute;will-change:transform}#intro .ac>svg{display:block;width:100%;height:100%}
@@ -265,6 +300,32 @@ const CSS = `
 #intro .sc7.on .bob{animation:inBob 2.2s ease-in-out infinite alternate}
 @keyframes inBob{from{transform:translateY(0)}to{transform:translateY(-8px)}}
 #intro .bub{opacity:0}#intro .sc7.on .bub{transform-origin:20% 100%;animation:inPop .5s .3s ease-out both}
+/* seasons: one overlay per scene, cross-faded; gentle parallax on the base landscape */
+#intro .in-art svg.in-season .ss{opacity:0;transition:opacity .9s ease}
+#intro[data-s="1"] .in-art svg.in-season .ss1,#intro[data-s="2"] .in-art svg.in-season .ss2,#intro[data-s="3"] .in-art svg.in-season .ss3,#intro[data-s="4"] .in-art svg.in-season .ss4,#intro[data-s="5"] .in-art svg.in-season .ss5,#intro[data-s="6"] .in-art svg.in-season .ss6,#intro[data-s="7"] .in-art svg.in-season .ss7,#intro[data-s="8"] .in-art svg.in-season .ss8{opacity:1}
+#intro .in-art>svg.in-bg{transition:transform 1.4s cubic-bezier(.2,.8,.2,1);transform-origin:50% 60%}
+#intro[data-s="2"] svg.in-bg{transform:translate3d(-6px,-4px,0) scale(1.03)}#intro[data-s="3"] svg.in-bg{transform:translate3d(6px,0,0) scale(1.03)}
+#intro[data-s="8"] svg.in-bg,#intro[data-s="4"] svg.in-bg{transform:translate3d(0,-8px,0) scale(1.05)}#intro[data-s="5"] svg.in-bg{transform:translate3d(-4px,4px,0) scale(1.02)}#intro[data-s="6"] svg.in-bg{transform:translate3d(4px,-4px,0) scale(1.04)}
+#intro .cl{transition:opacity .9s}#intro[data-s="8"] .cl,#intro[data-s="4"] .cl{opacity:.6}
+#intro[data-s="2"] .pt{background:#fff;border-radius:50%;width:6px;height:6px}
+#intro[data-s="3"] .pt{background:#e0873a;border-radius:100% 0 100% 0}#intro[data-s="3"] .pt:nth-child(2n){background:#d9603f}
+#intro[data-s="5"] .pt,#intro[data-s="6"] .pt,#intro[data-s="8"] .pt,#intro[data-s="4"] .pt{opacity:0}
+/* match scene = warm summer-festival dusk (light, not night) */
+#intro .in-art svg.in-night rect{fill:#f7a868;opacity:.3}#intro .in-art svg.in-night .stars{display:none}
+#intro .sc2.on .mski{animation:inSki 3.6s .3s ease-in-out both}
+@keyframes inSki{0%{transform:translate(-60px,-70px) rotate(14deg)}55%{transform:translate(0,0) rotate(10deg)}70%{transform:translate(6px,4px) rotate(-4deg)}100%{transform:translate(0,0) rotate(0)}}
+#intro .sc3.on .mhike{animation:inHike .55s ease-in-out infinite alternate}
+@keyframes inHike{from{transform:translateY(0) rotate(-3deg)}to{transform:translateY(-6px) rotate(3deg)}}
+#intro .sc8.on .soak{animation:inSoak 2.4s ease-in-out infinite alternate}
+@keyframes inSoak{from{transform:translateY(0)}to{transform:translateY(5px)}}
+#intro .bubm,#intro .bubl,#intro .pill{opacity:0}
+#intro .sc8.on .bubm{transform-origin:70% 100%;animation:inPop .45s .6s ease-out both}
+#intro .sc8.on .bubl{transform-origin:30% 100%;animation:inPop .45s 1.6s ease-out both}
+#intro .sc8.on .pl1{transform-origin:center;animation:inPop .4s .9s ease-out both,inTap .5s 1.3s ease-in-out 2 alternate}
+#intro .sc8.on .pl2{transform-origin:center;animation:inPop .4s 1.9s ease-out both,inTap .5s 2.3s ease-in-out 3 alternate}
+@keyframes inTap{to{transform:scale(1.14)}}
+#intro .sc8.on .stm{transform-origin:50% 100%;animation:inSteam 2.6s ease-in-out infinite}
+#intro.rm .bubm,#intro.rm .bubl,#intro.rm .pill{opacity:1}
 #intro.rm *,#intro.rm *::before{animation:none!important;transition:none!important}
 #intro.rm .pt{display:none}
 #intro.rm .stamp,#intro.rm .hp,#intro.rm .tx,#intro.rm .lan,#intro.rm .fwb,#intro.rm .bub,#intro.rm .still{opacity:1}
@@ -273,7 +334,83 @@ const CSS = `
 #intro.rm .in-dots button.on i{animation:none;transform:none}
 `;
 // ------------------------------------------------------------------ behaviour
-let el, cur = 0, timer, opts = {}, audio, soundOn = false, built = false;
+// ---- original intro jingle (Web Audio only, no files). C major pentatonic, music box + soft flute pad, 100 bpm, 12 bars ≈ 28.8 s loop.
+const J = (() => {
+  const BPM = 100, B = 60 / BPM, BARS = 12, LOOP = BARS * 4 * B;
+  const NN = { C4: 261.63, D4: 293.66, E4: 329.63, G4: 392, A4: 440, C5: 523.25, D5: 587.33, E5: 659.25, G5: 783.99, A5: 880, C6: 1046.5, F3: 174.61, G3: 196, A3: 220, C3: 130.81, E3: 164.81, D3: 146.83 };
+  // melody: [beat, note, beats]  (original tune, written for this app)
+  const MEL = [[0,'E5',1],[1,'G5',1],[2,'A5',1.5],[3.5,'G5',.5],[4,'E5',1],[5,'D5',1],[6,'C5',2],
+    [8,'D5',1],[9,'E5',1],[10,'G5',1],[11,'E5',1],[12,'D5',3],[15,'C5',1],
+    [16,'A4',1],[17,'C5',1],[18,'D5',1.5],[19.5,'E5',.5],[20,'G5',2],[22,'E5',1],[23,'D5',1],
+    [24,'C5',1],[25,'D5',.5],[25.5,'E5',.5],[26,'D5',1],[27,'A4',1],[28,'C5',4],
+    [32,'G5',1],[33,'A5',1],[34,'C6',1.5],[35.5,'A5',.5],[36,'G5',1],[37,'E5',1],[38,'G5',2],
+    [40,'A5',1],[41,'G5',1],[42,'E5',1],[43,'D5',1],[44,'C5',2],[46,'D5',1],[47,'E5',1]];
+  const CH = [['C3','E4','G4'],['A3','C4','E4'],['F3','A4','C5'],['G3','D4','G4'],['C3','E4','G4'],['A3','C4','E4'],['D3','A4','C5'],['G3','D4','G4'],['C3','E4','A4'],['A3','C4','E4'],['F3','A4','C5'],['C3','E4','G4']];
+  function box(ctx, out, f, t, dur, v = .2) {          // music box / celesta: sine + bright partials, fast decay
+    [[1, 1], [2, .35], [4.02, .12], [6.1, .05]].forEach(([m, a]) => {
+      const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.value = f * m;
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v * a, t + .006); g.gain.exponentialRampToValueAtTime(.0001, t + Math.min(2.4, .7 + dur * 1.2) / Math.sqrt(m));
+      o.connect(g).connect(out); o.start(t); o.stop(t + 2.6);
+    });
+  }
+  function pad(ctx, out, f, t, dur, v = .045) {         // soft flute pad: triangle, slow attack, gentle vibrato, low-passed
+    const o = ctx.createOscillator(), g = ctx.createGain(), lp = ctx.createBiquadFilter(), l = ctx.createOscillator(), lg = ctx.createGain();
+    o.type = 'triangle'; o.frequency.value = f; lp.type = 'lowpass'; lp.frequency.value = 1400; l.frequency.value = 4.6; lg.gain.value = f * .004;
+    l.connect(lg).connect(o.frequency);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .6); g.gain.setValueAtTime(v, t + dur - .5); g.gain.linearRampToValueAtTime(0, t + dur + .3);
+    o.connect(lp).connect(g).connect(out); o.start(t); l.start(t); o.stop(t + dur + .4); l.stop(t + dur + .4);
+  }
+  function loop(ctx, out, t0) {
+    MEL.forEach(([b, n, d]) => box(ctx, out, NN[n], t0 + b * B, d * B));
+    CH.forEach((c, i) => c.forEach((n, k) => pad(ctx, out, NN[n] * (k ? 1 : 1), t0 + i * 4 * B, 4 * B, k ? .03 : .045)));
+    for (let i = 0; i < BARS; i++) [1, 3].forEach(bt => box(ctx, out, NN[CH[i][1]] * 2, t0 + (i * 4 + bt + .5) * B, .3, .05));   // soft off-beat sparkles
+  }
+  function noise(ctx, len) { const b = ctx.createBuffer(1, ctx.sampleRate * len, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b }
+  function sting(ctx, out, kind, t) {
+    if (kind === 'yes') {                                // heart pop: rising blip + two bells
+      const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(520, t); o.frequency.exponentialRampToValueAtTime(1250, t + .12);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.16, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + .25); o.connect(g).connect(out); o.start(t); o.stop(t + .3);
+      box(ctx, out, NN.E5 * 2, t + .12, .4, .12); box(ctx, out, NN.G5 * 2, t + .24, .5, .1);
+    } else if (kind === 'no') {                          // leaf whoosh: band-passed noise sweeping down
+      const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain(); s.buffer = noise(ctx, 1);
+      f.type = 'bandpass'; f.Q.value = 1.4; f.frequency.setValueAtTime(2600, t); f.frequency.exponentialRampToValueAtTime(380, t + .8);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.22, t + .15); g.gain.exponentialRampToValueAtTime(.0001, t + .9);
+      s.connect(f).connect(g).connect(out); s.start(t); s.stop(t + 1);
+    } else if (kind === 'onsen') {                       // water bloop + two soft bells (Maybe / Love)
+      const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(240, t); o.frequency.exponentialRampToValueAtTime(520, t + .14);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.14, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + .22); o.connect(g).connect(out); o.start(t); o.stop(t + .3);
+      box(ctx, out, NN.G5, t + .9, .5, .1); box(ctx, out, NN.C6, t + 1.6, .6, .12);
+    } else if (kind === 'spring') {                      // birdsong chirps
+      [0, .18, .9, 1.05].forEach((d, k) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(2400 + k * 200, t + d); o.frequency.exponentialRampToValueAtTime(3600, t + d + .08);
+        g.gain.setValueAtTime(0, t + d); g.gain.linearRampToValueAtTime(.035, t + d + .01); g.gain.exponentialRampToValueAtTime(.0001, t + d + .1); o.connect(g).connect(out); o.start(t + d); o.stop(t + d + .12) });
+    } else if (kind === 'match') {                       // lantern chime (bell) + sparkle run
+      [NN.C5, NN.G5, NN.C6].forEach((f, k) => box(ctx, out, f, t + k * .05, 2, .14));
+      [NN.E5, NN.G5, NN.A5, NN.C6, NN.D5 * 2, NN.E5 * 2].forEach((f, k) => box(ctx, out, f * 2, t + .35 + k * .07 + Math.random() * .02, .2, .05));
+    }
+  }
+  function chain(ctx, dest, vol = .55) {
+    const g = ctx.createGain(); g.gain.value = vol; const c = ctx.createDynamicsCompressor(); c.threshold.value = -20; c.ratio.value = 3;
+    g.connect(c).connect(dest); return g;
+  }
+  return { LOOP, loop, sting, chain };
+})();
+window.IntroJingle = J; J.state = () => (jc ? jc.state : 'none') + (jplaying ? '+playing' : '');
+const LSM = 'crew_intro_sound';     // '1' on, '0' muted (saved); unset = start on first tap
+let jc, jout, jtimer, jnext = 0, jplaying = false;
+function jStart() {
+  try {
+    jc = jc || new (window.AudioContext || window.webkitAudioContext)(); if (jc.state === 'suspended') jc.resume();
+    if (jplaying) return; jplaying = true;
+    jout = J.chain(jc, jc.destination, .0001); jout.gain.setValueAtTime(.0001, jc.currentTime); jout.gain.exponentialRampToValueAtTime(.5, jc.currentTime + 1.2);
+    jnext = jc.currentTime + .1; const tick = () => { if (!jplaying) return; if (jnext - jc.currentTime < 2) { J.loop(jc, jout, jnext); jnext += J.LOOP } jtimer = setTimeout(tick, 500) }; tick();
+  } catch (e) { }
+}
+function jStop(fade = .8) {
+  if (!jplaying) return; jplaying = false; clearTimeout(jtimer);
+  try { const o = jout, t = jc.currentTime; o.gain.cancelScheduledValues(t); o.gain.setValueAtTime(o.gain.value, t); o.gain.exponentialRampToValueAtTime(.0001, t + fade); setTimeout(() => { try { o.disconnect() } catch (e) { } }, fade * 1000 + 200) } catch (e) { }
+}
+function jSting(i) { if (!jplaying) return; const k = i === 2 ? 'yes' : i === 3 ? 'no' : i === 5 ? 'match' : i === 8 ? 'onsen' : i === 1 ? 'spring' : null; if (k) J.sting(jc, jout, k, jc.currentTime + .05) }
+let el, cur = 0, timer, opts = {}, soundOn = false, built = false;
 const $ = s => el.querySelector(s);
 function build() {
   if (built) return; built = true;
@@ -286,7 +423,7 @@ function build() {
     <form id="inForm" hidden><input id="inName" maxlength="24" placeholder="e.g. Sam" autocapitalize="words" enterkeyhint="go" autocomplete="off" aria-label="Your name"><button class="cta" type="submit">Join the crew</button></form>
     <button id="inDone" class="cta" type="button" hidden>Back to swiping</button><button id="inPick" class="alt" type="button" hidden>Already in the crew? Pick your name</button></div>
    <div class="in-hint" id="inHint"></div></div>
-   <button id="introSound" class="ib2" type="button" aria-pressed="false" title="Gentle sound (off by default)">🔇 Sound</button><button id="introSkip" class="ib2" type="button">Skip ›</button></div>`;
+   <button id="introSound" class="ib2" type="button" aria-pressed="false" title="Play the little tune">🔇 Sound</button><button id="introSkip" class="ib2" type="button">Skip ›</button></div>`;
   document.body.appendChild(el);
   const pet = $('.in-petals');
   for (let i = 0; i < 16; i++) {
@@ -295,7 +432,10 @@ function build() {
     p.style.animationDuration = (9 + Math.random() * 8).toFixed(1) + 's'; p.style.animationDelay = (-Math.random() * 16).toFixed(1) + 's'; pet.appendChild(p);
   }
   $('#introSkip').onclick = e => { e.stopPropagation(); close('skip') };
-  $('#introSound').onclick = e => { e.stopPropagation(); soundOn = !soundOn; e.currentTarget.textContent = soundOn ? '🔈 Sound' : '🔇 Sound'; e.currentTarget.setAttribute('aria-pressed', soundOn); if (soundOn) chime(cur) };
+  $('#introSound').onclick = e => { e.stopPropagation(); setSound(!soundOn, true) };
+  // iOS needs a gesture: the first tap anywhere in the intro (e.g. 'Tap to continue') starts the jingle unless the user muted it before
+  el.addEventListener('pointerdown', e => { if (!soundOn && localStorage.getItem(LSM) !== '0' && !e.target.closest('#introSound,#introSkip')) setSound(true, false) }, true);
+  el.addEventListener('keydown', e => { if (!soundOn && localStorage.getItem(LSM) !== '0' && (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter')) setSound(true, false) }, true);
   $('.in-dots').onclick = e => { const b = e.target.closest('button'); if (b) { e.stopPropagation(); go(+b.dataset.i) } };
   $('#inArt').onclick = e => { const r = el.getBoundingClientRect(); (e.clientX - r.left < r.width * .28) ? go(cur - 1) : go(cur + 1) };
   $('#inCap').onclick = e => { if (e.target.closest('form,button,input')) return; go(cur + 1) };
@@ -314,17 +454,22 @@ function build() {
   }, true);
   document.addEventListener('visibilitychange', () => { if (Intro.open) { if (document.hidden) clearTimeout(timer); else arm() } });
 }
+function setSound(on, save) {
+  soundOn = on; const b = $('#introSound'); b.textContent = on ? '🔈 Sound' : '🔇 Sound'; b.setAttribute('aria-pressed', on); b.title = on ? 'Mute' : 'Play the little tune';
+  if (save) localStorage.setItem(LSM, on ? '1' : '0');
+  if (on) jStart(); else jStop(.4);
+}
 function arm() {
   clearTimeout(timer); const d = SC[cur].d; if (!d) return;
   timer = setTimeout(() => go(cur + 1), RM.matches ? d + 2500 : d);
 }
 function go(i) {
   if (i < 0) i = 0; if (i >= N) i = N - 1;
-  cur = i; const s = SC[i]; el.dataset.s = i + 1;
-  el.querySelectorAll('.sc').forEach(g => g.classList.toggle('on', g.classList.contains('sc' + (i + 1))));
+  cur = i; const s = SC[i]; el.dataset.s = s.k;
+  el.querySelectorAll('.sc').forEach(g => g.classList.toggle('on', g.classList.contains('sc' + s.k)));
   el.querySelectorAll('.in-dots button').forEach((b, k) => { b.classList.toggle('on', k === i); b.classList.toggle('done', k < i); b.classList.toggle('static', !s.d); b.style.setProperty('--d', (RM.matches ? s.d + 2500 : s.d) + 'ms'); b.setAttribute('aria-current', k === i ? 'step' : 'false'); const ii = b.querySelector('i'); ii.style.animation = 'none'; void ii.offsetWidth; ii.style.animation = '' });
   const txt = $('.txt'); txt.style.animation = 'none'; void txt.offsetWidth; txt.style.animation = '';
-  $('#inT').innerHTML = i === 4 ? 'If everyone says Yes… <em>It\'s a match!</em>' : i === 3 ? 'A house only disappears when <em>EVERYONE</em> says No' : s.t.replace(/= (Yes|No)/, '= <em>$1</em>');
+  $('#inT').innerHTML = s.k === 5 ? 'If everyone says Yes… <em>It\'s a match!</em>' : s.k === 4 ? 'A house only disappears when <em>EVERYONE</em> says No' : s.t.replace(/= (Yes|No)/, '= <em>$1</em>');
   $('#inS').textContent = s.s;
   const last = i === N - 1, signed = !!opts.signedIn;
   $('#inForm').hidden = !last || signed; $('#inDone').hidden = !last || !signed; $('#inPick').hidden = !last || signed || !opts.hasMembers;
@@ -333,22 +478,11 @@ function go(i) {
   $('#inHint').innerHTML = last ? '' : desk ? 'Click or press <kbd>→</kbd> / <kbd>Space</kbd> for next · <kbd>←</kbd> back · <kbd>Esc</kbd> skip' : 'Tap to continue ›';
   $('#introSkip').hidden = last;
   if (last && !signed && desk) setTimeout(() => $('#inName').focus(), 350);
-  if (soundOn) chime(i);
+  if (soundOn) jSting(s.k);
   arm();
 }
-function chime(i) {
-  try {
-    audio = audio || new (window.AudioContext || window.webkitAudioContext)(); if (audio.state === 'suspended') audio.resume();
-    const scale = [523.25, 587.33, 659.25, 783.99, 880, 1046.5], notes = i === 4 ? [0, 2, 3, 5] : i === 1 ? [2, 4] : i === 2 ? [3, 1] : i === 3 ? [1, 0] : [i % 6];
-    notes.forEach((n, k) => {
-      const t = audio.currentTime + k * .14, o = audio.createOscillator(), g = audio.createGain();
-      o.type = 'sine'; o.frequency.value = scale[n]; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.05, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + 1.1);
-      o.connect(g).connect(audio.destination); o.start(t); o.stop(t + 1.2);
-    });
-  } catch (e) { }
-}
 function close(why, name) {
-  clearTimeout(timer); localStorage.setItem(LS, '1'); Intro.open = false;
+  clearTimeout(timer); localStorage.setItem(LS, '1'); Intro.open = false; jStop(1.2); soundOn = false; const sb = $('#introSound'); if (sb) { sb.textContent = '🔇 Sound'; sb.setAttribute('aria-pressed', false) }
   el.classList.add('out'); setTimeout(() => { el.hidden = true; el.classList.remove('out'); el.querySelectorAll('.sc').forEach(g => g.classList.remove('on')) }, 350);
   opts.onClose?.(why, name);
 }
