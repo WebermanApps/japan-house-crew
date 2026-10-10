@@ -15,6 +15,23 @@
 <link rel="icon" href="icon-192.png">
 <link rel="stylesheet" href="vendor/leaflet.css?v=dd7af4bb63">
 <link rel="stylesheet" href="app.css?v=dd7af4bb63">
+<!-- MW brand fonts (Khand headings, Hind body; tokens from maxweberman.com brand-tokens.css) -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Khand:wght@500;600;700&family=Hind:wght@400;500;600;700&display=swap">
+<style id="mw-brand-fonts">
+:root{--mw-font-heading:"Khand","Arial Narrow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mw-font-body:"Hind",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji"}
+html body,html body :where(*:not(code,pre,kbd,samp)){font-family:var(--mw-font-body)!important}
+html body :is(h1,h2,h3,h4,h5,h6),html body :is(h1,h2,h3,h4,h5,h6) :where(*:not(code)){font-family:var(--mw-font-heading)!important;font-weight:700;letter-spacing:0}
+</style>
+<style id="mw-private">
+#nocode{background:#FAF3EB!important}
+#nocode .sbox{border:1px solid #E5E5E5;border-radius:12px;box-shadow:0 6px 24px rgba(10,10,10,.08);padding:28px 22px;color:#171717}
+#nocode .mw-wm{font-family:var(--mw-font-heading)!important;font-weight:700;font-size:13px;letter-spacing:.14em;color:#171717;margin-bottom:18px}
+#nocode .mw-lockicon{width:56px;height:56px;margin:0 auto 10px;border-radius:50%;background:#F5F5F5;display:flex;align-items:center;justify-content:center}
+#nocode h2{font-size:28px;line-height:1.05;margin:4px 0 10px}
+#nocode p{font-size:16px;line-height:1.5;margin:0 0 8px;color:#171717}
+#nocode p.mw-hint{font-size:13px;color:#737373;margin-top:14px}
+</style>
 </head><body>
 <header id="top">
   <div class="brand">🏯 Crew</div>
@@ -59,7 +76,7 @@
     <button type="button" id="introAgain" class="linkb">▶ How it works (30-sec intro)</button>
   </div>
 </div>
-<div id="nocode" hidden><div class="sbox"><div class="logo">🔒</div><h2>Group link needed</h2><p>Open this app with the full group link you were sent (it ends in <code>?g=…</code>).</p></div></div>
+<div id="nocode" hidden><div class="sbox"><div class="mw-wm">MAX WEBERMAN</div><div class="mw-lockicon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#171717" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div><h2>This Page Is Private</h2><p>Japan House Crew is just for our group. Ask Max for your group link.</p><p class="mw-hint">Already have it? Open the full link you were sent. It ends in <code>?g=…</code></p></div></div>
 <div id="menu" hidden>
   <div class="mcard">
     <h3 id="mHello"></h3>
