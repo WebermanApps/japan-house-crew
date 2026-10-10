@@ -60,8 +60,8 @@ function house(cls = '') {
 }
 function card(price = '¥1.5M', spec = '6DK · 119 m² · onsen 9 min', stamp = '', vibe = 75) {
   const id = 'iCl' + (++cid);
-  const st = stamp === 'k' ? `<g transform="translate(-26 -46) rotate(-16)"><g class="stamp"><rect x="-30" y="-14" width="60" height="28" rx="6" fill="#fff" fill-opacity=".85" stroke="#1a9e4b" stroke-width="3.5"/><text x="0" y="7.5" text-anchor="middle" font-size="19" font-weight="900" fill="#1a9e4b" letter-spacing="2">YES</text></g></g>`
-    : stamp === 't' ? `<g transform="translate(26 -46) rotate(16)"><g class="stamp"><rect x="-30" y="-14" width="60" height="28" rx="6" fill="#fff" fill-opacity=".85" stroke="#d6453d" stroke-width="3.5"/><text x="0" y="7.5" text-anchor="middle" font-size="19" font-weight="900" fill="#d6453d" letter-spacing="2">NO</text></g></g>` : '';
+  const st = stamp === 'k' ? `<g transform="translate(-26 -46) rotate(-16)"><g class="stamp"><rect x="-30" y="-14" width="60" height="28" rx="6" fill="#fff" fill-opacity=".85" stroke="#16A34A" stroke-width="3.5"/><text x="0" y="7.5" text-anchor="middle" font-size="19" font-weight="900" fill="#16A34A" letter-spacing="2">YES</text></g></g>`
+    : stamp === 't' ? `<g transform="translate(26 -46) rotate(16)"><g class="stamp"><rect x="-30" y="-14" width="60" height="28" rx="6" fill="#fff" fill-opacity=".85" stroke="#E53935" stroke-width="3.5"/><text x="0" y="7.5" text-anchor="middle" font-size="19" font-weight="900" fill="#E53935" letter-spacing="2">NO</text></g></g>` : '';
   return `<g class="cd"><rect x="-62" y="-82" width="124" height="166" rx="15" fill="#2f2a22" opacity=".14" transform="translate(4 6)"/>
   <rect x="-62" y="-82" width="124" height="166" rx="15" fill="#fffdf7" stroke="#e5dac2" stroke-width="1.5"/>
   <clipPath id="${id}"><rect x="-55" y="-75" width="110" height="104" rx="10"/></clipPath>
@@ -73,7 +73,7 @@ function card(price = '¥1.5M', spec = '6DK · 119 m² · onsen 9 min', stamp = 
   <text x="-52" y="66" font-size="8.6" fill="#6b6255">${spec}</text>${st}</g>`;
 }
 const heart = (c = '#ef5a6f') => `<path d="M0 7C-13 -3 -15 -14 -7.5 -17.5C-3.5 -19.5 0 -16.5 0 -13C0 -16.5 3.5 -19.5 7.5 -17.5C15 -14 13 -3 0 7Z" fill="${c}"/>`;
-const xb = `<g><circle r="11" fill="#fff" stroke="#d6453d" stroke-width="2.5"/><path d="M-4.5 -4.5L4.5 4.5M4.5 -4.5L-4.5 4.5" stroke="#d6453d" stroke-width="3" stroke-linecap="round"/></g>`;
+const xb = `<g><circle r="11" fill="#fff" stroke="#E53935" stroke-width="2.5"/><path d="M-4.5 -4.5L4.5 4.5M4.5 -4.5L-4.5 4.5" stroke="#E53935" stroke-width="3" stroke-linecap="round"/></g>`;
 const lantern = `<g class="lw"><circle r="20" fill="url(#iGlow)" opacity=".8"/><path d="M0 -17v-6" stroke="#5a3a2a" stroke-width="1.5"/>
   <rect x="-9" y="-14" width="18" height="25" rx="8" fill="#f2884b"/><path d="M-8 -6h16M-9 1h18M-8 7h16" stroke="#d0603a" stroke-width="1" opacity=".7"/>
   <rect x="-5" y="-16" width="10" height="3" rx="1" fill="#5a3a2a"/><rect x="-5" y="10" width="10" height="3" rx="1" fill="#5a3a2a"/><ellipse cx="-3" cy="-4" rx="2.5" ry="5" fill="#ffd9a0" opacity=".7"/></g>`;
@@ -176,16 +176,16 @@ ${SV('sc sc7')}${[[110, 230], [300, 300], [90, 330], [320, 400]].map(([x, y], i)
 <div class="sc sc8">${A(200, 400, 1.25, 'soak', spirit('a', '', '', 'towel') + '<ellipse cx="0" cy="40" rx="78" ry="22" fill="#b9e2ea" opacity=".95"/><path d="M-60 34q10 -5 20 0t20 0t20 0t20 0t20 0t20 0" stroke="#fff" stroke-width="2" fill="none" opacity=".8"/>', [-80, -72, 160, 136])}
  ${A(118, 250, 1, 'bubm', '<circle r="30" fill="#fff8e6" stroke="#f0a020" stroke-width="3"/><text y="12" text-anchor="middle" font-size="34" font-weight="900" fill="#f0a020">?</text><path d="M14 26L26 40L4 29Z" fill="#fff8e6" stroke="#f0a020" stroke-width="2"/>', [-34, -34, 68, 78])}
  ${A(282, 238, 1, 'bubl', '<circle r="32" fill="#fff0f2" stroke="#e8335f" stroke-width="3"/>' + at(0, 6, 1.5, heart('#e8335f')) + '<path d="M-14 28L-28 44L-4 31Z" fill="#fff0f2" stroke="#e8335f" stroke-width="2"/>', [-36, -36, 72, 84])}
- ${A(140, 168, 1, 'pill pl1', '<rect x="-46" y="-18" width="92" height="36" rx="18" fill="#fff" stroke="#f0a020" stroke-width="3"/><text y="6" text-anchor="middle" font-size="15" font-weight="800" fill="#c47a00">? Maybe</text>', [-48, -20, 96, 40])}
- ${A(262, 168, 1, 'pill pl2', '<rect x="-46" y="-18" width="92" height="36" rx="18" fill="#e8335f"/><text y="6" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">❤ Love</text>', [-48, -20, 96, 40])}
+ ${A(140, 168, 1, 'pill pl1', '<rect x="-46" y="-18" width="92" height="36" rx="18" fill="#F59E0B" stroke="#B45309" stroke-width="2"/><text y="6" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">? Maybe</text>', [-48, -20, 96, 40])}
+ ${A(262, 168, 1, 'pill pl2', '<rect x="-46" y="-18" width="92" height="36" rx="18" fill="#E11D48" stroke="#9F1239" stroke-width="2"/><text y="6" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">❤ Love</text>', [-48, -20, 96, 40])}
  ${[[150, 330], [250, 320], [200, 300]].map(([x, y], i) => A(x, y, 1, 'stm', '<path d="M0 0q-8 -10 0 -20t0 -20" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>', [-10, -44, 20, 48], dl(i * .7))).join('')}</div>
 </div>`;
 // ------------------------------------------------------------------ styles
 const CSS = `
 #intro{position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;background:#e9e3d2;font-family:"Hiragino Maru Gothic ProN","Zen Maru Gothic","Nunito","Quicksand",ui-rounded,system-ui,sans-serif;color:#3b3330;-webkit-user-select:none;user-select:none;opacity:1;transition:opacity .35s}
 #intro[hidden],#intro [hidden]{display:none!important}#intro.out{opacity:0}
-#intro .in-wrap{position:relative;width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;background:#f6efdf}
-#intro .in-art{position:relative;flex:1;min-height:0;overflow:hidden;cursor:pointer}
+#intro .in-cap{touch-action:pan-y}#intro .in-wrap{position:relative;width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;background:#f6efdf}
+#intro .in-art{touch-action:pan-y;position:relative;flex:1;min-height:0;overflow:hidden;cursor:pointer}
 #intro .in-art>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 #intro .in-cap{position:relative;z-index:2;margin-top:-18px;background:#fbf6ea;border-radius:26px 26px 0 0;padding:16px 22px calc(16px + env(safe-area-inset-bottom,0px));min-height:178px;box-shadow:0 -6px 22px #5a4a2a1f;cursor:pointer;display:flex;flex-direction:column}
 #intro .in-dots{display:flex;gap:0;justify-content:center;margin:-12px -12px -8px}#intro .in-dots button{flex-shrink:0}
@@ -428,21 +428,56 @@ window.IntroJingle = J; J.state = () => (jc ? jc.state : 'none') + (jplaying ? '
 const LSM = 'crew_intro_sound_v2';  // sound ON by default; only an explicit mute after this change ('0') is honoured (old 'crew_intro_sound' key ignored)
 try { localStorage.removeItem('crew_intro_sound') } catch (e) { }
 const wantSound = () => localStorage.getItem(LSM) !== '0';
-let jc, jout, jtimer, jnext = 0, jplaying = false;
-function jStart() {
+let jc, jout, jan, jtimer, jnext = 0, jplaying = false, htmlUnlocked = false;   // jplaying = music wanted; audible = jc.state === 'running'
+const SILENT_WAV = 'data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQIAAAAAAA==';
+function jCtx() {
+  if (!jc || jc.state === 'closed') { jc = new (window.AudioContext || window.webkitAudioContext)(); jout = null }
+  return jc;
+}
+function jSchedule() {                     // (re)start the music from "now" on a fresh output bus
+  clearTimeout(jtimer);
+  if (jout) { const o = jout; try { o.gain.cancelScheduledValues(0); o.gain.setValueAtTime(.0001, jc.currentTime) } catch (e) { } setTimeout(() => { try { o.disconnect() } catch (e) { } }, 60) }
+  jout = J.chain(jc, jc.destination, .0001);
+  if (!jan) { jan = jc.createAnalyser(); jan.fftSize = 512 } try { jout.connect(jan) } catch (e) { }
+  const t = jc.currentTime; jout.gain.setValueAtTime(.0001, t); jout.gain.exponentialRampToValueAtTime(.5, t + 1);
+  jnext = t + .06; jSchedule.at = t;
+  const tick = () => { if (!jplaying || !jout) return; if (jc.state === 'running' && jnext - jc.currentTime < 2) { J.loop(jc, jout, jnext); jnext += J.LOOP } jtimer = setTimeout(tick, 400) };
+  J.loop(jc, jout, jnext); jnext += J.LOOP; jtimer = setTimeout(tick, 400);
+}
+function jStart() {                        // may be called without a gesture (autoplay attempt) – then it waits for jKick()
   try {
-    jc = jc || new (window.AudioContext || window.webkitAudioContext)(); if (jc.state === 'suspended') jc.resume();
-    if (jplaying) return; jplaying = true;
-    if (jc.state !== 'running') jc.resume?.().catch(() => { });
-    jout = J.chain(jc, jc.destination, .0001); jout.gain.setValueAtTime(.0001, jc.currentTime); jout.gain.exponentialRampToValueAtTime(.5, jc.currentTime + 1.2);
-    jnext = jc.currentTime + .1; const tick = () => { if (!jplaying) return; if (jnext - jc.currentTime < 2) { J.loop(jc, jout, jnext); jnext += J.LOOP } jtimer = setTimeout(tick, 500) }; tick();
+    jplaying = true; const c = jCtx();
+    if (c.state === 'running') { if (!jout) jSchedule(); return }
+    if (!jout) jSchedule();      // queued on the (suspended) clock: plays from the start once the context runs
+    c.resume?.().then(() => { if (jplaying && c.state === 'running' && (!jout || c.currentTime - jSchedule.at > 1.5)) jSchedule() }).catch(() => { });
   } catch (e) { }
 }
-function jStop(fade = .8) {
-  if (!jplaying) return; jplaying = false; clearTimeout(jtimer);
-  try { const o = jout, t = jc.currentTime; o.gain.cancelScheduledValues(t); o.gain.setValueAtTime(o.gain.value, t); o.gain.exponentialRampToValueAtTime(.0001, t + fade); setTimeout(() => { try { o.disconnect() } catch (e) { } }, fade * 1000 + 200) } catch (e) { }
+// called synchronously inside EVERY early user gesture (document-level, capture): unlock + (re)schedule if not audible yet
+function jKick() {
+  if (!soundOn || !window.Intro?.open) return;
+  try {
+    if (jc && jc.state === 'running' && jout && jplaying) return;              // already audible
+    const now = performance.now(), newGesture = now - (jKick.t || -1e9) > 1000; jKick.t = now;
+    // iOS: a context born outside a gesture can stay stuck 'suspended' even after resume() – replace it on the next separate gesture
+    if (jc && jc.state === 'suspended' && jKick.tries && newGesture) { try { jc.close() } catch (e) { } jc = null; jan = null; jout = null }
+    if (newGesture) jKick.tries = (jKick.tries || 0) + 1;
+    const c = jCtx(); jplaying = true;
+    c.resume?.();                                                                 // must be called inside the gesture
+    const sb = c.createBufferSource(); sb.buffer = c.createBuffer(1, 1, 22050); sb.connect(c.destination); sb.start(0);   // iOS unlock
+    if (!htmlUnlocked) { htmlUnlocked = true; try { const a = new Audio(SILENT_WAV); a.setAttribute('playsinline', ''); a.play().catch(() => { htmlUnlocked = false }) } catch (e) { } }   // iOS silent switch -> playback session
+    if (!jout || c.state !== 'running' && c.currentTime - jSchedule.at > .5) jSchedule();   // (re)schedule from now if nothing audible is queued
+    if (c.state !== 'running') c.resume?.().then(() => { if (jplaying && c.state === 'running' && c.currentTime - jSchedule.at > 1.5) jSchedule() }).catch(() => { });
+  } catch (e) { }
 }
-function jSting(i) { if (!jplaying) return; const k = i === 2 ? 'yes' : i === 3 ? 'no' : i === 5 ? 'match' : i === 8 ? 'onsen' : i === 1 ? 'spring' : null; if (k) J.sting(jc, jout, k, jc.currentTime + .05) }
+['pointerdown', 'touchstart', 'touchend', 'mousedown', 'click', 'keydown'].forEach(ev => window.addEventListener(ev, jKick, { capture: true, passive: true }));   // window-capture: runs before the intro's own key handler
+const jWake = () => { if (document.visibilityState === 'visible' && jplaying && soundOn && jc && jc.state !== 'running') jc.resume?.().catch(() => { }) };
+document.addEventListener('visibilitychange', jWake); addEventListener('pageshow', jWake);
+J.level = () => { if (!jan) return 0; const d = new Float32Array(jan.fftSize); jan.getFloatTimeDomainData(d); let s = 0; for (const x of d) s += x * x; return Math.sqrt(s / d.length) };
+function jStop(fade = .8) {
+  jplaying = false; clearTimeout(jtimer); if (!jout) return;
+  try { const o = jout, t = jc.currentTime; jout = null; o.gain.cancelScheduledValues(t); o.gain.setValueAtTime(Math.max(o.gain.value, .0001), t); o.gain.exponentialRampToValueAtTime(.0001, t + fade); setTimeout(() => { try { o.disconnect() } catch (e) { } }, fade * 1000 + 200) } catch (e) { }
+}
+function jSting(i) { if (!jplaying || !jout || !jc || jc.state !== 'running') return; const k = i === 2 ? 'yes' : i === 3 ? 'no' : i === 5 ? 'match' : i === 8 ? 'onsen' : i === 1 ? 'spring' : null; if (k) J.sting(jc, jout, k, jc.currentTime + .05) }
 let el, cur = 0, timer, opts = {}, soundOn = true, built = false;
 const $ = s => el.querySelector(s);
 function build() {
@@ -468,10 +503,32 @@ function build() {
   $('#introSound').onclick = e => { e.stopPropagation(); setSound(!soundOn, true) };
   // iOS needs a gesture: the first tap anywhere in the intro (e.g. 'Tap to continue') starts the jingle unless the user muted it before
   // first interaction anywhere on the intro (incl. the tap that advances) unlocks audio if autoplay was blocked
-  const unlock = e => { if (!Intro.open || !soundOn || e.target.closest?.('#introSound')) return; if (!jplaying) jStart(); else if (jc && jc.state !== 'running') jc.resume().catch(() => { }) };
-  ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(ev => el.addEventListener(ev, unlock, { capture: true, passive: true }));
+  // audio unlock: document-level jKick() (below the jingle) runs on every early gesture, incl. the tap that advances
   $('.in-dots').onclick = e => { const b = e.target.closest('button'); if (b) { e.stopPropagation(); go(+b.dataset.i) } };
-  $('#inArt').onclick = e => { const r = el.getBoundingClientRect(); (e.clientX - r.left < r.width * .28) ? go(cur - 1) : go(cur + 1) };
+  $('#inArt').onclick = e => { if (dragged) { dragged = false; return } const r = el.getBoundingClientRect(); (e.clientX - r.left < r.width * .28) ? go(cur - 1) : go(cur + 1) };
+  // swipe: drag left = next, right = previous; the art follows the finger and snaps (the first swipe also unlocks audio via jKick)
+  let sx = null, sy = 0, dx = 0, dragged = false, horiz = null; const art = $('#inArt'), wrap = $('.in-wrap');
+  wrap.addEventListener('pointerdown', e => { if (e.target.closest('button,input,form,a')) return; sx = e.clientX; sy = e.clientY; dx = 0; horiz = null; art.style.transition = 'none' });
+  wrap.addEventListener('pointermove', e => {
+    if (sx === null) return; dx = e.clientX - sx; const dy = e.clientY - sy;
+    if (horiz === null && Math.abs(dx) + Math.abs(dy) > 8) horiz = Math.abs(dx) > Math.abs(dy);
+    if (!horiz) return; if (e.cancelable) e.preventDefault();
+    const edge = (dx > 0 && cur === 0) || (dx < 0 && cur === N - 1) ? .3 : 1;
+    art.style.transform = `translate3d(${dx * edge}px,0,0) rotate(${dx * edge / 60}deg)`; art.style.opacity = 1 - Math.min(.35, Math.abs(dx) / 900);
+  });
+  const end = () => {
+    if (sx === null) return; sx = null; const w = art.clientWidth || 360, go2 = horiz && Math.abs(dx) > Math.min(70, w * .18);
+    if (horiz && Math.abs(dx) > 8) dragged = true;
+    art.style.transition = 'transform .28s cubic-bezier(.2,.8,.2,1),opacity .28s';
+    if (go2 && !((dx > 0 && cur === 0) || (dx < 0 && cur === N - 1))) {
+      const dir = dx < 0 ? 1 : -1; art.style.transform = `translate3d(${-dir * w}px,0,0)`; art.style.opacity = 0;
+      setTimeout(() => { go(cur + dir); art.style.transition = 'none'; art.style.transform = `translate3d(${dir * w * .5}px,0,0)`; art.style.opacity = 0;
+        requestAnimationFrame(() => requestAnimationFrame(() => { art.style.transition = 'transform .3s cubic-bezier(.2,.8,.2,1),opacity .3s'; art.style.transform = ''; art.style.opacity = '' })) }, 200);
+    } else { art.style.transform = ''; art.style.opacity = '' }
+    setTimeout(() => { dragged = false }, 350);
+  };
+  wrap.addEventListener('pointerup', end); wrap.addEventListener('pointercancel', end);
+  $('#inCap').addEventListener('click', e => { if (dragged) { e.stopImmediatePropagation(); dragged = false } }, true);
   $('#inCap').onclick = e => { if (e.target.closest('form,button,input')) return; go(cur + 1) };
   $('#inForm').onsubmit = e => { e.preventDefault(); const n = $('#inName').value.trim(); if (!n) { $('#inName').focus(); return } close('join', n) };
   $('#inDone').onclick = e => { e.stopPropagation(); close('done') };
