@@ -1,7 +1,7 @@
 'use strict';
 /* Japan House Crew – group Keep/Toss. Votes live on the server (Netlify Function + Blobs); this device remembers who you are.
    Elimination rule: a house disappears for everyone only when EVERY member has tossed it. */
-const V = 'dd7af4bb63';
+const V = 'c59e5e3e9a';
 const $ = s => document.querySelector(s);
 const fmt = n => n == null ? '–' : Math.round(n).toLocaleString('en-US');
 const esc = s => (s ?? '').toString().replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -479,10 +479,9 @@ function showSignin(list) {
   const ms = list || S.members; $('#pickWrap').hidden = !ms.length;
   $('#pick').innerHTML = ms.map(m => `<button data-id="${m.id}" style="background:${m.color}">${esc(m.name)}</button>`).join('');
   $('#pick').querySelectorAll('button').forEach(b => b.onclick = () => { const m = ms.find(x => x.id === b.dataset.id); signedIn(m) });
-  if (window.Intro && !Intro.seen() && !Intro.open) playIntro();
   setTimeout(() => { if (!window.Intro?.open) $('#nameIn').focus() }, 50);
 }
-// animated "How it works" intro (intro.js): automatic on a device's first sign-in screen, replayable from the menu
+// animated "How it works" intro (intro.js): automatic on every page load, replayable from the menu
 function playIntro() {
   if (!window.Intro) return;
   Intro.play({
@@ -540,6 +539,8 @@ else fetch('data.json?v=' + V).then(r => r.json()).then(async data => {
   if (DESK) showTab(curTab === 'swipe' ? 'matches' : curTab);
   await sync(true);
   if (!me) showSignin(S.members); else { render(); showTip(false) }
+  // intro plays on EVERY load (Max, 2026-10-10); signed-in users end on 'Back to swiping'. (crew_intro_autoplay=off: automated-test hook only)
+  if (window.Intro && !Intro.open && localStorage.getItem('crew_intro_autoplay') !== 'off') playIntro();
   flush();
 }).catch(e => { $('#deck').innerHTML = `<p style="padding:20px">Could not load data (${esc(e)}).</p>` });
 setInterval(() => { if (document.visibilityState === 'visible') { sync(); flush() } }, POLL_MS);

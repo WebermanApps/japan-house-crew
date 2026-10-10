@@ -202,7 +202,7 @@ const CSS = `
 #intro .in-hint{font-size:13px;color:#a08c70;text-align:center;margin-top:8px}
 #intro .in-hint kbd{font:inherit;font-size:11px;border:1px solid #d6c8ad;border-radius:4px;padding:0 4px;background:#fff}
 #intro .ib2{position:absolute;z-index:5;top:calc(12px + env(safe-area-inset-top,0px));border:0;border-radius:20px;padding:8px 14px;font:inherit;font-size:14px;font-weight:800;background:#fffaf0d9;color:#5a4a3a;box-shadow:0 2px 8px #0002;cursor:pointer;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
-#introSkip{right:14px}#introSound{left:14px}#intro .ib2{min-height:44px;min-width:44px}
+#introSkip{right:calc(14px + env(safe-area-inset-right,0px));min-height:48px!important;padding:10px 18px!important;font-size:16px!important;background:#2b2a27!important;color:#fff!important;box-shadow:0 3px 12px #0005!important}#introSkip:hover,#introSkip:focus-visible{background:#000!important;outline:3px solid #ffd36b;outline-offset:2px}#introSound{left:calc(14px + env(safe-area-inset-left,0px))}#intro .ib2{min-height:44px;min-width:44px}
 #intro form{display:flex;gap:8px;margin-top:12px}
 #intro input{flex:1;min-width:0;font:inherit;font-size:18px;padding:11px 14px;border:2px solid #d9c8a5;border-radius:14px;background:#fff;color:#3b3330;-webkit-user-select:text;user-select:text}
 #intro input:focus{outline:none;border-color:#c2763f}
@@ -425,12 +425,15 @@ const J = (() => {
   return { LOOP, loop, sting, chain };
 })();
 window.IntroJingle = J; J.state = () => (jc ? jc.state : 'none') + (jplaying ? '+playing' : '');
-const LSM = 'crew_intro_sound';     // '1' on, '0' muted (saved); unset = start on first tap
+const LSM = 'crew_intro_sound_v2';  // sound ON by default; only an explicit mute after this change ('0') is honoured (old 'crew_intro_sound' key ignored)
+try { localStorage.removeItem('crew_intro_sound') } catch (e) { }
+const wantSound = () => localStorage.getItem(LSM) !== '0';
 let jc, jout, jtimer, jnext = 0, jplaying = false;
 function jStart() {
   try {
     jc = jc || new (window.AudioContext || window.webkitAudioContext)(); if (jc.state === 'suspended') jc.resume();
     if (jplaying) return; jplaying = true;
+    if (jc.state !== 'running') jc.resume?.().catch(() => { });
     jout = J.chain(jc, jc.destination, .0001); jout.gain.setValueAtTime(.0001, jc.currentTime); jout.gain.exponentialRampToValueAtTime(.5, jc.currentTime + 1.2);
     jnext = jc.currentTime + .1; const tick = () => { if (!jplaying) return; if (jnext - jc.currentTime < 2) { J.loop(jc, jout, jnext); jnext += J.LOOP } jtimer = setTimeout(tick, 500) }; tick();
   } catch (e) { }
@@ -440,7 +443,7 @@ function jStop(fade = .8) {
   try { const o = jout, t = jc.currentTime; o.gain.cancelScheduledValues(t); o.gain.setValueAtTime(o.gain.value, t); o.gain.exponentialRampToValueAtTime(.0001, t + fade); setTimeout(() => { try { o.disconnect() } catch (e) { } }, fade * 1000 + 200) } catch (e) { }
 }
 function jSting(i) { if (!jplaying) return; const k = i === 2 ? 'yes' : i === 3 ? 'no' : i === 5 ? 'match' : i === 8 ? 'onsen' : i === 1 ? 'spring' : null; if (k) J.sting(jc, jout, k, jc.currentTime + .05) }
-let el, cur = 0, timer, opts = {}, soundOn = false, built = false;
+let el, cur = 0, timer, opts = {}, soundOn = true, built = false;
 const $ = s => el.querySelector(s);
 function build() {
   if (built) return; built = true;
@@ -453,7 +456,7 @@ function build() {
     <form id="inForm" hidden><input id="inName" maxlength="24" placeholder="e.g. Sam" autocapitalize="words" enterkeyhint="go" autocomplete="off" aria-label="Your name"><button class="cta" type="submit">Join the crew</button></form>
     <button id="inDone" class="cta" type="button" hidden>Back to swiping</button><button id="inPick" class="alt" type="button" hidden>Already in the crew? Pick your name</button></div>
    <div class="in-hint" id="inHint"></div></div>
-   <button id="introSound" class="ib2" type="button" aria-pressed="false" title="Play the little tune">🔇 Sound</button><button id="introSkip" class="ib2" type="button">Skip ›</button></div>`;
+   <button id="introSound" class="ib2" type="button" aria-pressed="true" title="Mute">🔈 Sound</button><button id="introSkip" class="ib2" type="button" aria-label="Skip intro">Skip intro ✕</button></div>`;
   document.body.appendChild(el);
   const pet = $('.in-petals');
   for (let i = 0; i < 16; i++) {
@@ -464,8 +467,9 @@ function build() {
   $('#introSkip').onclick = e => { e.stopPropagation(); close('skip') };
   $('#introSound').onclick = e => { e.stopPropagation(); setSound(!soundOn, true) };
   // iOS needs a gesture: the first tap anywhere in the intro (e.g. 'Tap to continue') starts the jingle unless the user muted it before
-  el.addEventListener('pointerdown', e => { if (!soundOn && localStorage.getItem(LSM) !== '0' && !e.target.closest('#introSound,#introSkip')) setSound(true, false) }, true);
-  el.addEventListener('keydown', e => { if (!soundOn && localStorage.getItem(LSM) !== '0' && (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter')) setSound(true, false) }, true);
+  // first interaction anywhere on the intro (incl. the tap that advances) unlocks audio if autoplay was blocked
+  const unlock = e => { if (!Intro.open || !soundOn || e.target.closest?.('#introSound')) return; if (!jplaying) jStart(); else if (jc && jc.state !== 'running') jc.resume().catch(() => { }) };
+  ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(ev => el.addEventListener(ev, unlock, { capture: true, passive: true }));
   $('.in-dots').onclick = e => { const b = e.target.closest('button'); if (b) { e.stopPropagation(); go(+b.dataset.i) } };
   $('#inArt').onclick = e => { const r = el.getBoundingClientRect(); (e.clientX - r.left < r.width * .28) ? go(cur - 1) : go(cur + 1) };
   $('#inCap').onclick = e => { if (e.target.closest('form,button,input')) return; go(cur + 1) };
@@ -506,13 +510,12 @@ function go(i) {
   if (last && signed) { $('#inT').textContent = 'That\'s it – happy swiping!'; $('#inS').textContent = 'You can replay this any time from the ⋯ menu → How it works.' }
   const desk = matchMedia('(min-width:900px)').matches;
   $('#inHint').innerHTML = last ? '' : desk ? 'Click or press <kbd>→</kbd> / <kbd>Space</kbd> for next · <kbd>←</kbd> back · <kbd>Esc</kbd> skip' : 'Tap to continue ›';
-  $('#introSkip').hidden = last;
   if (last && !signed && desk) setTimeout(() => $('#inName').focus(), 350);
   if (soundOn) jSting(s.k);
   arm();
 }
 function close(why, name) {
-  clearTimeout(timer); localStorage.setItem(LS, '1'); Intro.open = false; jStop(1.2); soundOn = false; const sb = $('#introSound'); if (sb) { sb.textContent = '🔇 Sound'; sb.setAttribute('aria-pressed', false) }
+  clearTimeout(timer); localStorage.setItem(LS, '1'); Intro.open = false; jStop(1.2);
   el.classList.add('out'); setTimeout(() => { el.hidden = true; el.classList.remove('out'); el.querySelectorAll('.sc').forEach(g => g.classList.remove('on')) }, 350);
   opts.onClose?.(why, name);
 }
@@ -527,7 +530,9 @@ const Intro = window.Intro = {
   play(o = {}) {
     build(); opts = o; Intro.open = true; el.hidden = false; el.classList.toggle('rm', RM.matches);
     if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
-    $('#inName').value = ''; setW(); go(0);
+    $('#inName').value = ''; setW();
+    setSound(wantSound(), false);   // ON unless the user explicitly muted; tries autoplay now, silently waits for the first gesture otherwise
+    go(0);
   },
 };
 })();
