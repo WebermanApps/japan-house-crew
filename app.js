@@ -1,7 +1,7 @@
 'use strict';
 /* Japan House Crew – group Keep/Toss. Votes live on the server (Netlify Function + Blobs); this device remembers who you are.
    Elimination rule: a house disappears for everyone only when EVERY member has tossed it. */
-const V = '0b80c5e746';
+const V = '21c239973d';
 const $ = s => document.querySelector(s);
 const fmt = n => n == null ? '–' : Math.round(n).toLocaleString('en-US');
 const esc = s => (s ?? '').toString().replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

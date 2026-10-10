@@ -188,10 +188,10 @@ const CSS = `
 #intro .in-art{position:relative;flex:1;min-height:0;overflow:hidden;cursor:pointer}
 #intro .in-art>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 #intro .in-cap{position:relative;z-index:2;margin-top:-18px;background:#fbf6ea;border-radius:26px 26px 0 0;padding:16px 22px calc(16px + env(safe-area-inset-bottom,0px));min-height:178px;box-shadow:0 -6px 22px #5a4a2a1f;cursor:pointer;display:flex;flex-direction:column}
-#intro .in-dots{display:flex;gap:0;justify-content:center;margin:-12px 0 -8px}
+#intro .in-dots{display:flex;gap:0;justify-content:center;margin:-12px -12px -8px}#intro .in-dots button{flex-shrink:0}
 #intro .in-dots button{width:8px;height:8px;padding:0;border:18px solid transparent;background-clip:padding-box;box-sizing:content-box;border-radius:6px;background:#d9cdb5;background-clip:padding-box;overflow:hidden;position:relative;transition:width .3s,background .3s;cursor:pointer}
 #intro .in-dots button.done{background:#b79b6e}
-#intro .in-dots button.on{width:30px;background:#e4d8c0}
+#intro .in-dots button.on{width:18px;background:#e4d8c0}
 #intro .in-dots button.on i{position:absolute;inset:0;background:#c2763f;transform-origin:left;transform:scaleX(0);animation:inProg var(--d,4s) linear forwards}
 #intro .in-dots button.on.static i{animation:none;transform:none}
 #intro .in-dots button,#intro .in-dots button.on,#intro .in-dots button.done{background-clip:padding-box}
