@@ -1,5 +1,5 @@
 :root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px);
---bg:#f4f1ea;--ink:#222;--dark:#2b2a27;--keep:#1a9e4b;--toss:#d33;--ikon:#f2a900;--epic:#1a5cc8;--tabh:56px;--acth:76px;--toph:46px}
+--bg:#f4f1ea;--ink:#222;--dark:#2b2a27;--keep:#1a9e4b;--toss:#e8584a;--maybe:#f0a020;--love:#e8335f;--ikon:#f2a900;--epic:#1a5cc8;--tabh:56px;--acth:76px;--toph:46px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font:15px/1.35 -apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",sans-serif;
  overscroll-behavior:none;-webkit-text-size-adjust:100%;touch-action:manipulation}
@@ -260,3 +260,24 @@ html.desk .fcard{max-width:480px}
 html.desk .grid{grid-auto-rows:120px}
 
 .sbox .linkb{background:none;border:0;color:#3d5a73;font-size:14px;font-weight:700;margin-top:12px;padding:6px;text-decoration:underline;cursor:pointer}
+.mc .ooa{font-size:11px;color:#8a6d3b;background:#fbf1dc;border-radius:6px;padding:1px 6px;margin-left:4px}
+/* ---- Yes / No / Maybe / Love controls (2026-10-10) */
+#actions{gap:14px}
+.act.toss{color:var(--toss)}.act.keep{color:var(--keep)}.act.maybe{color:var(--maybe);font-weight:900}.act.love{color:var(--love)}
+.act.love .ht{color:#e8102e}.act.maybe,.act.love{width:54px;height:54px;font-size:26px}
+.act{transition:transform .15s ease,box-shadow .15s ease}
+.act.toss{box-shadow:0 3px 12px #e8584a55}.act.keep{box-shadow:0 3px 12px #1a9e4b55}.act.maybe{box-shadow:0 3px 12px #f0a02055}.act.love{box-shadow:0 3px 12px #e8335f55}
+.stamp.my{left:50%;margin-left:-80px;top:120px;color:var(--maybe);border-color:var(--maybe);transform:rotate(-6deg)}
+.stamp.lv{left:18px;top:110px;color:var(--love);border-color:var(--love);transform:rotate(-10deg)}
+.stamp.t{color:var(--toss);border-color:var(--toss)}
+.seg button.on.my{background:var(--maybe);color:#fff;border-color:var(--maybe)}.seg button.on.lv{background:var(--love);color:#fff;border-color:var(--love)}
+.av.lv{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--love)}.av.my{outline:2px dashed var(--maybe);outline-offset:1px;opacity:.85}
+.votes .vg{margin-right:8px;white-space:nowrap}
+#detActs .maybe{background:var(--maybe);color:#fff}#detActs .love{background:var(--love);color:#fff}
+html.desk .act.maybe{background:var(--maybe);color:#fff;min-width:130px;justify-content:center}
+html.desk .act.love{background:var(--love);color:#fff;min-width:130px;justify-content:center}html.desk .act.love .ht{color:#fff}
+html.desk .act.toss{background:var(--toss)}
+html.desk .act:hover{transform:scale(1.07)}
+html.desk .act.toss,html.desk .act.keep{min-width:160px}
+@media (hover:hover) and (pointer:fine){html.desk #deck .card:hover{transform:scale(1.01);transition:transform .2s ease}html.desk .mc:hover{transform:scale(1.015);transition:transform .15s ease;box-shadow:0 4px 14px #0002}}
+@media (max-width:380px){#actions{gap:8px}.act{width:56px;height:56px}.act.maybe,.act.love{width:48px;height:48px}}

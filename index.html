@@ -13,8 +13,8 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
-<link rel="stylesheet" href="vendor/leaflet.css?v=784232b19b">
-<link rel="stylesheet" href="app.css?v=784232b19b">
+<link rel="stylesheet" href="vendor/leaflet.css?v=6c2748f5be">
+<link rel="stylesheet" href="app.css?v=6c2748f5be">
 </head><body>
 <header id="top">
   <div class="brand">🏯 Crew</div>
@@ -31,11 +31,13 @@
   <section id="v-group" class="view scroll"><div id="group"></div></section>
 </main>
 <div id="actions">
-  <button id="bToss" class="act toss" aria-label="Toss">✕<span class="dl">Toss</span></button>
-  <button id="bUndo" class="act undo" aria-label="Undo">↶<span class="dl">Undo</span></button>
-  <button id="bKeep" class="act keep" aria-label="Keep">♥<span class="dl">Keep</span></button>
+  <button id="bUndo" class="act undo" aria-label="Undo" title="Undo (Backspace)">↶<span class="dl">Undo</span></button>
+  <button id="bToss" class="act toss" aria-label="No" title="No (←)">✕<span class="dl">No</span></button>
+  <button id="bMaybe" class="act maybe" aria-label="Maybe" title="Maybe (M)">?<span class="dl">Maybe</span></button>
+  <button id="bLove" class="act love" aria-label="Love" title="Love (L)"><span class="ht">♥</span><span class="dl">Love</span></button>
+  <button id="bKeep" class="act keep" aria-label="Yes" title="Yes (→)">✓<span class="dl">Yes</span></button>
 </div>
-<div id="kbd" aria-hidden="true"><kbd>←</kbd> toss · <kbd>→</kbd> keep · <kbd>↑</kbd><kbd>↓</kbd> photos · <kbd>Backspace</kbd> undo · <kbd>Enter</kbd> full-screen photos · drag the details panel works too</div>
+<div id="kbd" aria-hidden="true"><kbd>←</kbd> no · <kbd>→</kbd> yes · <kbd>M</kbd> maybe · <kbd>L</kbd> love · <kbd>↑</kbd><kbd>↓</kbd> photos · <kbd>Backspace</kbd> undo · <kbd>Enter</kbd> full-screen photos · drag the details panel works too</div>
 <nav id="tabs">
   <button class="tab on" data-v="swipe"><span>🃏</span>Swipe</button>
   <button class="tab" data-v="matches"><span>💞</span>Matches <i id="matchN"></i></button>
@@ -74,12 +76,12 @@
 </div>
 <div id="viewer" hidden><div id="vcar"></div><div id="vcount"></div><button id="vclose" class="ib" aria-label="Close">✕</button><button id="vprev" class="pa l" aria-label="Previous photo">‹</button><button id="vnext" class="pa r" aria-label="Next photo">›</button></div>
 <div id="det" hidden><div class="dcard"><button id="detClose" class="dx" aria-label="Close">✕</button><div id="detBody"></div>
-  <div id="detActs"><button id="detToss" class="toss">✕ Toss</button><button id="detKeep" class="keep">♥ Keep</button></div></div></div>
+  <div id="detActs"><button id="detToss" class="toss">✕ No</button><button id="detMaybe" class="maybe">? Maybe</button><button id="detLove" class="love">♥ Love</button><button id="detKeep" class="keep">✓ Yes</button></div></div></div>
 <div id="filters" hidden><div class="fcard"><h3>Filter &amp; sort <span class="nb">(this device only)</span></h3><div id="fBody"></div>
   <div class="fbar"><span id="fCount"></span><button id="fReset">Reset</button><button id="fDone">Done</button></div></div></div>
 <div id="match" hidden></div>
 <div id="toast"></div>
-<script src="vendor/leaflet.js?v=784232b19b"></script>
-<script src="intro.js?v=784232b19b"></script>
-<script src="app.js?v=784232b19b"></script>
+<script src="vendor/leaflet.js?v=6c2748f5be"></script>
+<script src="intro.js?v=6c2748f5be"></script>
+<script src="app.js?v=6c2748f5be"></script>
 </body></html>

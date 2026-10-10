@@ -7,12 +7,12 @@ const LS = 'crew_intro_v1';
 const RM = matchMedia('(prefers-reduced-motion: reduce)');
 const SC = [
   { t: 'Welcome to Japan House Crew', s: "We're finding our cabin in Japan together. I'm Mori, the forest spirit – let me show you how it works.", d: 4400 },
-  { t: 'Swipe right = Keep', s: 'Love a house? Send it right and it gets a heart from you.', d: 4000 },
-  { t: 'Swipe left = Toss', s: "Not for us? Let it drift away like a leaf.", d: 4000 },
-  { t: 'A house only disappears when EVERYONE tosses it', s: 'One single keep and it stays in the deck for the whole crew.', d: 5000 },
-  { t: "If everyone keeps it… It's a match!", s: 'Lanterns up! That house goes straight to our Matches.', d: 4800 },
+  { t: 'Swipe right = Yes', s: 'Like it? Send it right. Really love it? Tap the red ❤️ Love button.', d: 4000 },
+  { t: 'Swipe left = No', s: 'Not for us? Let it drift away like a leaf. Unsure? Tap ? Maybe.', d: 4000 },
+  { t: 'A house only disappears when EVERYONE says No', s: 'One single Yes, Love or Maybe and it stays in play for the whole crew.', d: 5000 },
+  { t: "If everyone says Yes… It's a match!", s: 'Yes or Love from all of us = lanterns up! Love counts double in Matches.', d: 4800 },
   { t: 'Matches = we go visit and maybe buy it together', s: 'Road trip to the countryside, keys in hand.', d: 4400 },
-  { t: "What's your name?", s: 'So the crew knows who kept what. No password, no email.', d: 0 },
+  { t: "What's your name?", s: 'So the crew knows who voted what. No password, no email.', d: 0 },
 ];
 const N = SC.length;
 // ------------------------------------------------------------------ art helpers
@@ -52,8 +52,8 @@ function house(cls = '') {
 }
 function card(price = '¥1.5M', spec = '6DK · 119 m² · onsen 9 min', stamp = '', vibe = 75) {
   const id = 'iCl' + (++cid);
-  const st = stamp === 'k' ? `<g transform="translate(-26 -46) rotate(-16)"><g class="stamp"><rect x="-30" y="-14" width="60" height="28" rx="6" fill="#fff" fill-opacity=".85" stroke="#1a9e4b" stroke-width="3.5"/><text x="0" y="7.5" text-anchor="middle" font-size="19" font-weight="900" fill="#1a9e4b" letter-spacing="2">KEEP</text></g></g>`
-    : stamp === 't' ? `<g transform="translate(26 -46) rotate(16)"><g class="stamp"><rect x="-30" y="-14" width="60" height="28" rx="6" fill="#fff" fill-opacity=".85" stroke="#d6453d" stroke-width="3.5"/><text x="0" y="7.5" text-anchor="middle" font-size="19" font-weight="900" fill="#d6453d" letter-spacing="2">TOSS</text></g></g>` : '';
+  const st = stamp === 'k' ? `<g transform="translate(-26 -46) rotate(-16)"><g class="stamp"><rect x="-30" y="-14" width="60" height="28" rx="6" fill="#fff" fill-opacity=".85" stroke="#1a9e4b" stroke-width="3.5"/><text x="0" y="7.5" text-anchor="middle" font-size="19" font-weight="900" fill="#1a9e4b" letter-spacing="2">YES</text></g></g>`
+    : stamp === 't' ? `<g transform="translate(26 -46) rotate(16)"><g class="stamp"><rect x="-30" y="-14" width="60" height="28" rx="6" fill="#fff" fill-opacity=".85" stroke="#d6453d" stroke-width="3.5"/><text x="0" y="7.5" text-anchor="middle" font-size="19" font-weight="900" fill="#d6453d" letter-spacing="2">NO</text></g></g>` : '';
   return `<g class="cd"><rect x="-62" y="-82" width="124" height="166" rx="15" fill="#2f2a22" opacity=".14" transform="translate(4 6)"/>
   <rect x="-62" y="-82" width="124" height="166" rx="15" fill="#fffdf7" stroke="#e5dac2" stroke-width="1.5"/>
   <clipPath id="${id}"><rect x="-55" y="-75" width="110" height="104" rx="10"/></clipPath>
@@ -324,7 +324,7 @@ function go(i) {
   el.querySelectorAll('.sc').forEach(g => g.classList.toggle('on', g.classList.contains('sc' + (i + 1))));
   el.querySelectorAll('.in-dots button').forEach((b, k) => { b.classList.toggle('on', k === i); b.classList.toggle('done', k < i); b.classList.toggle('static', !s.d); b.style.setProperty('--d', (RM.matches ? s.d + 2500 : s.d) + 'ms'); b.setAttribute('aria-current', k === i ? 'step' : 'false'); const ii = b.querySelector('i'); ii.style.animation = 'none'; void ii.offsetWidth; ii.style.animation = '' });
   const txt = $('.txt'); txt.style.animation = 'none'; void txt.offsetWidth; txt.style.animation = '';
-  $('#inT').innerHTML = i === 4 ? 'If everyone keeps it… <em>It\'s a match!</em>' : i === 3 ? 'A house only disappears when <em>EVERYONE</em> tosses it' : s.t.replace(/= (Keep|Toss)/, '= <em>$1</em>');
+  $('#inT').innerHTML = i === 4 ? 'If everyone says Yes… <em>It\'s a match!</em>' : i === 3 ? 'A house only disappears when <em>EVERYONE</em> says No' : s.t.replace(/= (Yes|No)/, '= <em>$1</em>');
   $('#inS').textContent = s.s;
   const last = i === N - 1, signed = !!opts.signedIn;
   $('#inForm').hidden = !last || signed; $('#inDone').hidden = !last || !signed; $('#inPick').hidden = !last || signed || !opts.hasMembers;
