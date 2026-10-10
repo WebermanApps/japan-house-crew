@@ -336,34 +336,64 @@ const CSS = `
 // ------------------------------------------------------------------ behaviour
 // ---- original intro jingle (Web Audio only, no files). C major pentatonic, music box + soft flute pad, 100 bpm, 12 bars ≈ 28.8 s loop.
 const J = (() => {
-  const BPM = 100, B = 60 / BPM, BARS = 12, LOOP = BARS * 4 * B;
-  const NN = { C4: 261.63, D4: 293.66, E4: 329.63, G4: 392, A4: 440, C5: 523.25, D5: 587.33, E5: 659.25, G5: 783.99, A5: 880, C6: 1046.5, F3: 174.61, G3: 196, A3: 220, C3: 130.81, E3: 164.81, D3: 146.83 };
-  // melody: [beat, note, beats]  (original tune, written for this app)
-  const MEL = [[0,'E5',1],[1,'G5',1],[2,'A5',1.5],[3.5,'G5',.5],[4,'E5',1],[5,'D5',1],[6,'C5',2],
-    [8,'D5',1],[9,'E5',1],[10,'G5',1],[11,'E5',1],[12,'D5',3],[15,'C5',1],
-    [16,'A4',1],[17,'C5',1],[18,'D5',1.5],[19.5,'E5',.5],[20,'G5',2],[22,'E5',1],[23,'D5',1],
-    [24,'C5',1],[25,'D5',.5],[25.5,'E5',.5],[26,'D5',1],[27,'A4',1],[28,'C5',4],
-    [32,'G5',1],[33,'A5',1],[34,'C6',1.5],[35.5,'A5',.5],[36,'G5',1],[37,'E5',1],[38,'G5',2],
-    [40,'A5',1],[41,'G5',1],[42,'E5',1],[43,'D5',1],[44,'C5',2],[46,'D5',1],[47,'E5',1]];
-  const CH = [['C3','E4','G4'],['A3','C4','E4'],['F3','A4','C5'],['G3','D4','G4'],['C3','E4','G4'],['A3','C4','E4'],['D3','A4','C5'],['G3','D4','G4'],['C3','E4','A4'],['A3','C4','E4'],['F3','A4','C5'],['C3','E4','G4']];
-  function box(ctx, out, f, t, dur, v = .2) {          // music box / celesta: sine + bright partials, fast decay
+  const BPM = 126, B = 60 / BPM, BARS = 16, LOOP = BARS * 4 * B;      // upbeat: 126 bpm, 16 bars ≈ 30.5 s
+  const NN = { C3: 130.81, D3: 146.83, E3: 164.81, F3: 174.61, G3: 196, A3: 220, C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392, A4: 440,
+    C5: 523.25, D5: 587.33, E5: 659.25, G5: 783.99, A5: 880, C6: 1046.5, D6: 1174.66, E6: 1318.5, B4: 493.88 };
+  // original playful melody with skips (major pentatonic, written for this app): [beat, note, beats]
+  const PH_A = [[0,'C5',.5],[.5,'E5',.5],[1,'G5',1],[2,'A5',.5],[2.5,'G5',.5],[3,'E5',1],[4,'D5',.5],[4.5,'E5',.5],[5,'G5',.5],[5.5,'E5',.5],[6,'C5',1.5],
+    [8,'A4',.5],[8.5,'C5',.5],[9,'D5',1],[10,'E5',.5],[10.5,'G5',.5],[11,'A5',1],[12,'G5',.5],[12.5,'E5',.5],[13,'D5',.5],[13.5,'C5',.5],[14,'D5',1.5]];
+  const PH_B = [[0,'G5',.5],[.5,'A5',.5],[1,'C6',1],[2,'A5',.5],[2.5,'G5',.5],[3,'E5',.5],[3.5,'G5',.5],[4,'A5',.75],[4.75,'G5',.25],[5,'E5',.5],[5.5,'D5',.5],[6,'C5',1],[7,'G4',.5],[7.5,'A4',.5],
+    [8,'C5',.5],[8.5,'D5',.5],[9,'E5',.5],[9.5,'G5',.5],[10,'C6',.5],[10.5,'A5',.5],[11,'G5',1],[12,'E5',.5],[12.5,'D5',.5],[13,'E5',.5],[13.5,'D5',.5],[14,'C5',1.5]];
+  const CHORUS = [[0,'E6',.5],[.5,'D6',.5],[1,'C6',.5],[1.5,'A5',.5],[2,'G5',1],[3,'A5',.5],[3.5,'C6',.5],[4,'D6',.5],[4.5,'C6',.5],[5,'A5',.5],[5.5,'G5',.5],[6,'E5',1],[7,'G5',1],
+    [8,'A5',.5],[8.5,'G5',.5],[9,'E5',.5],[9.5,'D5',.5],[10,'C5',.5],[10.5,'E5',.5],[11,'G5',1],[12,'C6',1],[13,'G5',.5],[13.5,'E5',.5],[14,'C6',2]];
+  const MEL = [...PH_A, ...PH_B.map(([b, n, d]) => [b + 16, n, d]), ...PH_A.map(([b, n, d]) => [b + 32, n, d]), ...CHORUS.map(([b, n, d]) => [b + 48, n, d])];
+  const CH = [['C3','E4','G4','C5'],['A3','E4','A4','C5'],['F3','F4','A4','C5'],['G3','D4','G4','B4'],['C3','E4','G4','C5'],['A3','E4','A4','C5'],['D3','F4','A4','D5'],['G3','D4','G4','B4'],
+    ['C3','E4','G4','C5'],['A3','E4','A4','C5'],['F3','F4','A4','C5'],['G3','D4','G4','B4'],['F3','F4','A4','C5'],['G3','D4','G4','B4'],['A3','E4','A4','C5'],['C3','E4','G4','C5']];
+  const NZ = new WeakMap();
+  const nbuf = ctx => { if (!NZ.has(ctx)) { const b = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; NZ.set(ctx, b) } return NZ.get(ctx) };
+  function box(ctx, out, f, t, dur, v = .2) {          // music box / celesta
     [[1, 1], [2, .35], [4.02, .12], [6.1, .05]].forEach(([m, a]) => {
       const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.value = f * m;
-      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v * a, t + .006); g.gain.exponentialRampToValueAtTime(.0001, t + Math.min(2.4, .7 + dur * 1.2) / Math.sqrt(m));
-      o.connect(g).connect(out); o.start(t); o.stop(t + 2.6);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v * a, t + .005); g.gain.exponentialRampToValueAtTime(.0001, t + Math.min(1.6, .45 + dur * 1.1) / Math.sqrt(m));
+      o.connect(g).connect(out); o.start(t); o.stop(t + 1.8);
     });
   }
-  function pad(ctx, out, f, t, dur, v = .045) {         // soft flute pad: triangle, slow attack, gentle vibrato, low-passed
+  function pad(ctx, out, f, t, dur, v = .03) {          // soft flute: triangle, vibrato, low-passed
     const o = ctx.createOscillator(), g = ctx.createGain(), lp = ctx.createBiquadFilter(), l = ctx.createOscillator(), lg = ctx.createGain();
-    o.type = 'triangle'; o.frequency.value = f; lp.type = 'lowpass'; lp.frequency.value = 1400; l.frequency.value = 4.6; lg.gain.value = f * .004;
-    l.connect(lg).connect(o.frequency);
-    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .6); g.gain.setValueAtTime(v, t + dur - .5); g.gain.linearRampToValueAtTime(0, t + dur + .3);
-    o.connect(lp).connect(g).connect(out); o.start(t); l.start(t); o.stop(t + dur + .4); l.stop(t + dur + .4);
+    o.type = 'triangle'; o.frequency.value = f; lp.type = 'lowpass'; lp.frequency.value = 1500; l.frequency.value = 5; lg.gain.value = f * .004; l.connect(lg).connect(o.frequency);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .25); g.gain.setValueAtTime(v, t + dur - .25); g.gain.linearRampToValueAtTime(0, t + dur + .15);
+    o.connect(lp).connect(g).connect(out); o.start(t); l.start(t); o.stop(t + dur + .2); l.stop(t + dur + .2);
+  }
+  function uke(ctx, out, f, t, v = .05) {               // ukulele-like pluck: bright saw through a closing low-pass
+    const o = ctx.createOscillator(), lp = ctx.createBiquadFilter(), g = ctx.createGain(); o.type = 'sawtooth'; o.frequency.value = f;
+    lp.type = 'lowpass'; lp.frequency.setValueAtTime(3200, t); lp.frequency.exponentialRampToValueAtTime(500, t + .25);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .004); g.gain.exponentialRampToValueAtTime(.0001, t + .45);
+    o.connect(lp).connect(g).connect(out); o.start(t); o.stop(t + .5);
+  }
+  function pizz(ctx, out, f, t, v = .16) {              // pizzicato bass
+    const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'triangle'; o.frequency.value = f;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .006); g.gain.exponentialRampToValueAtTime(.0001, t + .32); o.connect(g).connect(out); o.start(t); o.stop(t + .35);
+  }
+  function hit(ctx, out, t, kind) {                    // shaker / clap (filtered noise), woodblock (short sine)
+    if (kind === 'wood') { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(1050, t); o.frequency.exponentialRampToValueAtTime(820, t + .04);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.07, t + .002); g.gain.exponentialRampToValueAtTime(.0001, t + .07); o.connect(g).connect(out); o.start(t); o.stop(t + .09); return }
+    const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain(); s.buffer = nbuf(ctx);
+    const shk = kind === 'shaker'; f.type = shk ? 'highpass' : 'bandpass'; f.frequency.value = shk ? 6500 : 1500; f.Q.value = shk ? .7 : 1.2;
+    const v = shk ? .045 : .09, len = shk ? .06 : .12; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .004); g.gain.exponentialRampToValueAtTime(.0001, t + len);
+    s.connect(f).connect(g).connect(out); s.start(t, Math.random() * .5); s.stop(t + len + .02);
+    if (!shk) { const s2 = ctx.createBufferSource(), g2 = ctx.createGain(); s2.buffer = nbuf(ctx); g2.gain.setValueAtTime(0, t + .012); g2.gain.linearRampToValueAtTime(v * .7, t + .016); g2.gain.exponentialRampToValueAtTime(.0001, t + .1); s2.connect(f); s2.connect(g2).connect(out); s2.start(t + .012, .3); s2.stop(t + .12) }
   }
   function loop(ctx, out, t0) {
-    MEL.forEach(([b, n, d]) => box(ctx, out, NN[n], t0 + b * B, d * B));
-    CH.forEach((c, i) => c.forEach((n, k) => pad(ctx, out, NN[n] * (k ? 1 : 1), t0 + i * 4 * B, 4 * B, k ? .03 : .045)));
-    for (let i = 0; i < BARS; i++) [1, 3].forEach(bt => box(ctx, out, NN[CH[i][1]] * 2, t0 + (i * 4 + bt + .5) * B, .3, .05));   // soft off-beat sparkles
+    MEL.forEach(([b, n, d]) => box(ctx, out, NN[n], t0 + b * B, d * B, .17));
+    CH.forEach((c, i) => {
+      const bt = t0 + i * 4 * B, chorus = i >= 12;
+      pad(ctx, out, NN[c[1]], bt, 4 * B, .022); pad(ctx, out, NN[c[2]], bt, 4 * B, .016);
+      [0, 1, 2, 3].forEach(k => pizz(ctx, out, NN[c[0]] * (k === 2 ? 1.5 : 1), bt + k * B));                       // bass on every beat (root, root, fifth, root)
+      [.5, 1.5, 2.5, 3.5].forEach((k, j) => c.slice(1).forEach((n, m) => uke(ctx, out, NN[n], bt + k * B + m * .012, j % 2 ? .03 : .04)));   // off-beat uke strums
+      for (let k = 0; k < 8; k++) hit(ctx, out, bt + k * B / 2, 'shaker');
+      if (i % 2) hit(ctx, out, bt + 3.5 * B, 'wood'); hit(ctx, out, bt + 1.5 * B, 'wood');
+      if (chorus) [1, 3].forEach(k => hit(ctx, out, bt + k * B, 'clap'));                                           // gentle claps on the chorus bars
+    });
   }
   function noise(ctx, len) { const b = ctx.createBuffer(1, ctx.sampleRate * len, ctx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b }
   function sting(ctx, out, kind, t) {
