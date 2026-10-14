@@ -1,7 +1,7 @@
 'use strict';
 /* Japan House Crew – group Keep/Toss. Votes live on the server (Netlify Function + Blobs); this device remembers who you are.
    Elimination rule: a house disappears for everyone only when EVERY member has tossed it. */
-const V = 'cee398749c';
+const V = 'a424586bac';
 const $ = s => document.querySelector(s);
 const fmt = n => n == null ? '–' : Math.round(n).toLocaleString('en-US');
 const esc = s => (s ?? '').toString().replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -18,7 +18,13 @@ function toast(t) { const e = $('#toast'); e.textContent = t; e.classList.add('o
 // ---------------------------------------------------------------- API
 // Static site can live on GitHub Pages; the vote backend stays a Netlify Function (stable 'api--' deploy alias, CORS-allowed).
 const API = /(^|\.)github\.io$/.test(location.hostname) ? 'https://api--japan-house-crew-e29a34.netlify.app/api/' : '/api/';
-async function api(path, body) {
+// Team Submit password gate (Oct 14 2026, hash only, shared /workspace/ops/submit/submit.js): every write needs the password.
+// interactive=true (a tap) may show the password box; background flushes never prompt and keep the write queued.
+async function api(path, body, interactive) {
+  if (body) {
+    const M = window.MWSubmit, ok = M && (M.isAuthed() || (interactive && await M.gate('japan-cottage')));
+    if (!ok) { const e = new Error('Password needed. Nothing was sent.'); e.pw = true; throw e }
+  }
   const opt = body ? { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...body, g: G }) } : { cache: 'no-store' };
   const r = await fetch(API + path + (body ? '' : '?g=' + encodeURIComponent(G)), opt);
   const j = await r.json().catch(() => ({}));
@@ -31,15 +37,15 @@ function setLocal(lid, d) {               // optimistic local state
   if (d) m[lid] = { d, t: new Date().toISOString() }; else delete m[lid];
 }
 function queueWrite(lid, d) {
-  pending = pending.filter(p => p.listing !== lid); pending.push({ member: me.id, listing: lid, d }); localStorage.setItem(LS_PEND, JSON.stringify(pending)); flush();
+  pending = pending.filter(p => p.listing !== lid); pending.push({ member: me.id, listing: lid, d }); localStorage.setItem(LS_PEND, JSON.stringify(pending)); flush(true);
 }
 let flushing = false;
-async function flush() {
+async function flush(interactive) {
   if (flushing || !pending.length) return; flushing = true;
   try {
     while (pending.length) {
       const p = pending[0];
-      try { await api('decide', p) } catch (e) { if (e.status && e.status < 500 && e.status !== 429) { console.warn('dropped write', p, e) } else throw e }
+      try { await api('decide', p, interactive) } catch (e) { if (e.pw) { flushing = false; updSync(); return } if (e.status && e.status < 500 && e.status !== 429) { console.warn('dropped write', p, e) } else throw e }
       pending = pending.filter(x => x !== p); localStorage.setItem(LS_PEND, JSON.stringify(pending));   // remove exactly the sent write (a newer one for the same house may have replaced it meanwhile, e.g. Undo)
     }
   } catch (e) { setTimeout(() => { flushing = false; flush() }, 5000); updSync(); return }
@@ -499,8 +505,8 @@ function signedIn(m) {
 $('#joinForm').onsubmit = async e => {
   e.preventDefault(); const name = $('#nameIn').value.trim(); if (!name) return;
   $('#joinBtn').disabled = true;
-  try { const j = await api('join', { name }); signedIn(j.member) }
-  catch (err) { $('#signErr').hidden = false; $('#signErr').textContent = err.status === 403 ? 'This group link is not valid.' : 'Could not join: ' + err.message }
+  try { const j = await api('join', { name }, true); signedIn(j.member) }
+  catch (err) { $('#signErr').hidden = false; $('#signErr').textContent = err.pw ? err.message : err.status === 403 ? 'This group link is not valid.' : 'Could not join: ' + err.message }
   finally { $('#joinBtn').disabled = false }
 };
 function showNoCode() { $('#nocode').hidden = false; $('#signin').hidden = true }
