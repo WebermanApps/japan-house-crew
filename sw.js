@@ -1,5 +1,5 @@
 /* Service worker: app shell + data precached, photos cached as viewed. The group API (/api/*) is NEVER cached. */
-const V = 'a424586bac', SHELL = 'crew-shell-' + V, PHOTOS = 'crew-photos-v1';
+const V = 'aa4698156a', SHELL = 'crew-shell-' + V, PHOTOS = 'crew-photos-v1';
 const ASSETS = ['index.html', 'app.css?v=' + V, 'app.js?v=' + V, 'submit.js?v=' + V, 'intro.js?v=' + V, 'vendor/leaflet.js?v=' + V, 'vendor/leaflet.css?v=' + V,
   'japan.json?v=' + V, 'data.json?v=' + V, 'manifest.json', 'icon-180.png', 'icon-192.png', 'icon-512.png',
   'fonts/fonts.css?v=' + V, ...['khand-500', 'khand-600', 'khand-700', 'hind-400', 'hind-500', 'hind-600', 'hind-700'].map(f => `fonts/${f}-latin.woff2`)];
